@@ -3,3 +3,5 @@ server:
 spring:
     profiles:
         active: desenvolvimento
+    thymeleaf:
+        check-template-location: false

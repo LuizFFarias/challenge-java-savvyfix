@@ -22,11 +22,15 @@ public class Produto {
     @Column(name = "ID_PROD")
     private Long id;
 
+    @Column(name = "NM_PROD")
     private  String nome;
 
+    @Column(name = "DESC_PROD")
     private String descricao;
 
+    @Column(name = "MARCA_PROD")
     private String marca;
 
+    @Column(name = "PRECO_FIXO")
     private float precoFixo;
 }

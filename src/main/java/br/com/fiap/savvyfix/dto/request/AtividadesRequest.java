@@ -23,7 +23,9 @@ public record AtividadesRequest (
         @NotNull( message = "O campo de demanda não pode ser nulo")
         String demanda,
 
-        AbstractRequest cliente
+        AbstractRequest cliente,
+
+        AbstractRequest produto
 ){
 
 }

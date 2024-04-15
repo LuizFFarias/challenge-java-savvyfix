@@ -21,15 +21,18 @@ public class Cliente {
     @Column(name = "ID_CLIENTE")
     private Long id;
 
+    @Column(name = "NM_CLIE")
     private String nome;
 
-    private int cpf;
+    @Column(name = "CPF_CLIE", length = 11)
+    private String cpf;
 
+    @Column(name = "SENHA_CLIE")
     private  String senha;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(
-            name = "ENDERECO",
+            name = "CEP_ENDERECO",
             referencedColumnName = "CEP_ENDERECO",
             foreignKey = @ForeignKey(
                     name = "CLIENTE_ENDERECO_FK"

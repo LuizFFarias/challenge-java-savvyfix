@@ -22,17 +22,21 @@ public class Compra {
     @Column(name = "ID_COMPRA")
     private Long id;
 
+    @Column(name = "NM_PROD")
     private String nomeProd;
 
+    @Column(name = "QNTD_PROD")
     private int qntdProd;
 
+    @Column(name = "VALOR_COMPRA")
     private float valorCompra;
 
+    @Column(name = "ESPECIFICACAO_PROD")
     private  String especificacoes;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(
-            name = "PRODUTO",
+            name = "ID_PROD",
             referencedColumnName = "ID_PROD",
             foreignKey = @ForeignKey(
                     name = "COMPRA_PRODUTO_FK"
@@ -43,7 +47,7 @@ public class Compra {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(
-            name = "CLIENTE",
+            name = "ID_CLIENTE",
             referencedColumnName = "ID_CLIENTE",
             foreignKey = @ForeignKey(
                     name = "COMPRA_CLIENTE_FK"
@@ -54,7 +58,7 @@ public class Compra {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(
-            name = "ATIVIDADES",
+            name = "PRECO_VARIADO",
             referencedColumnName = "PRECO_VARIADO",
             foreignKey = @ForeignKey(
                     name = "COMPRA_ATIVIDADES_FK"

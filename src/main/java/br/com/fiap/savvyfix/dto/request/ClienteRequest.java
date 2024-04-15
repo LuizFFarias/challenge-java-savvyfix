@@ -10,7 +10,7 @@ public record ClienteRequest (
 
         @CPF(message = "CPF inválido")
         @NotNull(message = "O cpf é obrigatório")
-        int cpf,
+        String cpf,
 
         @NotNull(message = "A senha é obrigatória")
         String senha,

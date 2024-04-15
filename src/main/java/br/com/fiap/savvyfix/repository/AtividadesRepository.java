@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface AtividadesRepository extends JpaRepository<Atividades, Long> {
 
-    List<Atividades> findByValor(float valorVariado);
+    List<Atividades> findByPrecoVariado(float precoVariado);
 }

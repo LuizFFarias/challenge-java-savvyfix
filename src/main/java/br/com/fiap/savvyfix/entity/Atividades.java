@@ -22,23 +22,38 @@ public class Atividades {
     @Column(name = "PRECO_VARIADO")
     private float precoVariado;
 
+    @Column(name = "HORARIO_ATUAL")
     private LocalTime horarioAtual;
 
+    @Column(name = "LOCALIZACAO_ATUAL")
     private String localizacaoAtual;
 
+    @Column(name = "CLIMA_ATUAL")
     private String  climaAtual;
 
+    @Column(name = "QNTD_PROCURA")
     private int qntdProcura;
 
+    @Column(name = "DEMANDA_PRODUTO")
     private String demanda;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(
-            name = "CLIENTE",
+            name = "ID_CLIENTE",
             referencedColumnName = "ID_CLIENTE",
             foreignKey = @ForeignKey(
                     name = "CLIENTE_ATIVIDADES_FK"
             )
     )
     private Cliente cliente;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(
+            name = "ID_PROD",
+            referencedColumnName = "ID_PROD",
+            foreignKey = @ForeignKey(
+                    name = "PRODUTO_ATIVIDADES_FK"
+            )
+    )
+    private Produto produto;
 }

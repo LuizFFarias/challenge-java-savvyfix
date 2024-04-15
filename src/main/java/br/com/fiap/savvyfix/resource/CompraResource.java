@@ -58,7 +58,7 @@ public class CompraResource {
         var entity = service.toEntity( compra );
         var produto = produtoService.findById( compra.produto().id());
         var cliente = clienteService.findById( compra.cliente().id());
-        var atividades = atividadesService.findByValor(compra.atividades().precoVariado());
+        var atividades = atividadesService.findByPrecoVariado(compra.atividades().precoVariado());
 
         if (Objects.nonNull( produto )) entity.setProduto(produto);
         if (Objects.nonNull( cliente )) entity.setCliente(cliente);

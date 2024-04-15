@@ -11,6 +11,7 @@ import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.repository.AtividadesRepository;
 import br.com.fiap.savvyfix.service.AtividadesService;
 import br.com.fiap.savvyfix.service.ClienteService;
+import br.com.fiap.savvyfix.service.ProdutoService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class AtividadesResource {
     @Autowired
     ClienteService clienteService;
 
+    @Autowired
+    ProdutoService produtoService;
+
     @GetMapping
     public Collection<AtividadesResponse> findAll() {
         var entity = service.findAll();
@@ -47,8 +51,11 @@ public class AtividadesResource {
     public ResponseEntity<AtividadesResponse> save(@RequestBody @Valid AtividadesRequest atividades) {
         var entity = service.toEntity( atividades );
         var cliente = clienteService.findById( atividades.cliente().id() );
+        var produto = produtoService.findById(atividades.produto().id());
         if (Objects.nonNull( cliente )) entity.setCliente(cliente);
         Atividades save = service.save( entity );
+        if (Objects.nonNull( produto )) entity.setProduto(produto);
+        service.save( entity );
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
                 .replacePath( "/{precoVariado}" )
@@ -58,9 +65,9 @@ public class AtividadesResource {
         return ResponseEntity.created( uri ).body( response );
     }
 
-    @GetMapping(value = "/cep/{cep}")
-    public ResponseEntity<List<AtividadesResponse>> findByValor(@PathVariable float valorVariado) {
-        var entity = service.findByValor( valorVariado );
+    @GetMapping(value = "/precoVariado/{precoVariado}")
+    public ResponseEntity<List<AtividadesResponse>> findByValor(@PathVariable float precoVariado) {
+        var entity = service.findByPrecoVariado( precoVariado );
         if (Objects.isNull( entity )) return ResponseEntity.notFound().build();
         var response = entity.stream().map( service::toResponse ).toList();
         return ResponseEntity.ok( response );

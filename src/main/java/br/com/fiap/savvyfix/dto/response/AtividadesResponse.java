@@ -20,7 +20,9 @@ public record AtividadesResponse (
 
         String demanda,
 
-        ClienteResponse cliente
+        ClienteResponse cliente,
+
+        ProdutoResponse produto
 ){
 
 }
