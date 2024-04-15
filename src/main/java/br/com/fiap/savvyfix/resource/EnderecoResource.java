@@ -1,73 +1,66 @@
 package br.com.fiap.savvyfix.resource;
 
 import br.com.fiap.savvyfix.dto.request.EnderecoRequest;
+import br.com.fiap.savvyfix.dto.request.ProdutoRequest;
 import br.com.fiap.savvyfix.dto.response.EnderecoResponse;
+import br.com.fiap.savvyfix.dto.response.ProdutoResponse;
 import br.com.fiap.savvyfix.entity.Endereco;
+import br.com.fiap.savvyfix.entity.Produto;
 import br.com.fiap.savvyfix.repository.EnderecoRepository;
+import br.com.fiap.savvyfix.service.EnderecoService;
+import br.com.fiap.savvyfix.service.ProdutoService;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
+import java.net.URI;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/enderecos")
 public class EnderecoResource {
 
-    private final EnderecoRepository enderecoRepository;
 
     @Autowired
-    public EnderecoResource(EnderecoRepository enderecoRepository) {
-        this.enderecoRepository = enderecoRepository;
-    }
+    EnderecoService service;
 
     @GetMapping
-    public ResponseEntity<List<EnderecoResponse>> getAllEnderecos() {
-        List<EnderecoResponse> enderecoResponses = enderecoRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(enderecoResponses);
+    public Collection<EnderecoResponse> findAll() {
+        var entity = service.findAll();
+        var response = entity
+                .stream().map( service::toResponse ).toList();
+        return response;
     }
 
-    @GetMapping("/{cep}")
-    public ResponseEntity<EnderecoResponse> getEnderecoByCep(@PathVariable String cep) {
-        return enderecoRepository.findByCep(cep)
-                .stream()
-                .map(endereco -> ResponseEntity.ok(toResponse(endereco)))
-                .findFirst()
-                .orElse(ResponseEntity.notFound().build());
-    }
-
+    @Transactional
     @PostMapping
-    public ResponseEntity<EnderecoResponse> createEndereco(@Valid @RequestBody EnderecoRequest request) {
-        Endereco endereco = toEntity(request);
-        endereco = enderecoRepository.save(endereco);
-        return ResponseEntity.ok(toResponse(endereco));
+    public ResponseEntity<EnderecoResponse> save(@RequestBody @Valid EnderecoRequest endereco) {
+        var entity = service.toEntity( endereco );
+        Endereco save = service.save( entity );
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .replacePath( "/{cep}" )
+                .buildAndExpand( save.getCep() )
+                .toUri();
+        var response = service.toResponse( save );
+        return ResponseEntity.created( uri ).body( response );
     }
 
-    private EnderecoResponse toResponse(Endereco endereco) {
-        return EnderecoResponse.builder()
-                .cep(endereco.getCep())
-                .rua(endereco.getRua())
-                .numero(endereco.getNumero())
-                .bairro(endereco.getBairro())
-                .cidade(endereco.getCidade())
-                .estado(endereco.getEstado())
-                .pais(endereco.getPais())
-                .build();
+    @GetMapping(value = "/cep/{cep}")
+    public ResponseEntity<List<EnderecoResponse>> findByCep(@PathVariable String cep) {
+        var entity = service.findByCep( cep );
+        if (Objects.isNull( entity )) return ResponseEntity.notFound().build();
+        var response = entity.stream().map( service::toResponse ).toList();
+        return ResponseEntity.ok( response );
     }
 
-    private Endereco toEntity(EnderecoRequest request) {
-        return Endereco.builder()
-                .cep(request.getCep())
-                .rua(request.getRua())
-                .numero(request.getNumero())
-                .bairro(request.getBairro())
-                .cidade(request.getCidade())
-                .estado(request.getEstado())
-                .pais(request.getPais())
-                .build();
-    }
+
+
+
 }

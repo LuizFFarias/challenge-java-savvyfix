@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class Endereco {
 
     @Id
+    @Column(name = "CEP_ENDERECO")
     private String cep;
 
     private String rua;

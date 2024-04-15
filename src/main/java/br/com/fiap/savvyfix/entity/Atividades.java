@@ -19,6 +19,7 @@ import java.time.LocalTime;
 public class Atividades {
 
     @Id
+    @Column(name = "PRECO_VARIADO")
     private float precoVariado;
 
     private LocalTime horarioAtual;
@@ -36,7 +37,7 @@ public class Atividades {
             name = "CLIENTE",
             referencedColumnName = "ID_CLIENTE",
             foreignKey = @ForeignKey(
-                    name = "CLIENTE_ENDERECO_FK"
+                    name = "CLIENTE_ATIVIDADES_FK"
             )
     )
     private Cliente cliente;

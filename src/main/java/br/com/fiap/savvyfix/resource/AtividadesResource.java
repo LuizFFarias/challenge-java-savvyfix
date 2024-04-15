@@ -1,93 +1,72 @@
 package br.com.fiap.savvyfix.resource;
 
 import br.com.fiap.savvyfix.dto.request.AtividadesRequest;
+import br.com.fiap.savvyfix.dto.request.ClienteRequest;
 import br.com.fiap.savvyfix.dto.response.AtividadesResponse;
+import br.com.fiap.savvyfix.dto.response.ClienteResponse;
+import br.com.fiap.savvyfix.dto.response.EnderecoResponse;
 import br.com.fiap.savvyfix.entity.Atividades;
+import br.com.fiap.savvyfix.entity.Cliente;
+import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.repository.AtividadesRepository;
+import br.com.fiap.savvyfix.service.AtividadesService;
+import br.com.fiap.savvyfix.service.ClienteService;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
+import java.net.URI;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/atividades")
 public class AtividadesResource {
 
-    private final AtividadesRepository atividadesRepository;
+    @Autowired
+    AtividadesService service;
 
     @Autowired
-    public AtividadesResource(AtividadesRepository atividadesRepository) {
-        this.atividadesRepository = atividadesRepository;
-    }
+    ClienteService clienteService;
 
     @GetMapping
-    public ResponseEntity<List<AtividadesResponse>> getAllAtividades() {
-        List<AtividadesResponse> atividadesResponses = atividadesRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(atividadesResponses);
+    public Collection<AtividadesResponse> findAll() {
+        var entity = service.findAll();
+        var response = entity
+                .stream().map( service::toResponse ).toList();
+        return response;
     }
 
-    @GetMapping("/{precoVariado}")
-    public ResponseEntity<AtividadesResponse> getAtividadesByPrecoVariado(@PathVariable float precoVariado) {
-        return atividadesRepository.findById(precoVariado)
-                .map(atividades -> ResponseEntity.ok(toResponse(atividades)))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
+    @Transactional
     @PostMapping
-    public ResponseEntity<AtividadesResponse> createAtividades(@Valid @RequestBody AtividadesRequest request) {
-        Atividades atividades = toEntity(request);
-        atividades = atividadesRepository.save(atividades);
-        return ResponseEntity.ok(toResponse(atividades));
+    public ResponseEntity<AtividadesResponse> save(@RequestBody @Valid AtividadesRequest atividades) {
+        var entity = service.toEntity( atividades );
+        var cliente = clienteService.findById( atividades.cliente().id() );
+        if (Objects.nonNull( cliente )) entity.setCliente(cliente);
+        Atividades save = service.save( entity );
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .replacePath( "/{precoVariado}" )
+                .buildAndExpand( save.getPrecoVariado() )
+                .toUri();
+        var response = service.toResponse( save );
+        return ResponseEntity.created( uri ).body( response );
     }
 
-    @PutMapping("/{precoVariado}")
-    public ResponseEntity<AtividadesResponse> updateAtividades(@PathVariable float precoVariado, @Valid @RequestBody AtividadesRequest request) {
-        if (!atividadesRepository.existsById(precoVariado)) {
-            return ResponseEntity.notFound().build();
-        }
-        Atividades atividades = toEntity(request);
-        atividades.setPrecoVariado(precoVariado);
-        atividades = atividadesRepository.save(atividades);
-        return ResponseEntity.ok(toResponse(atividades));
+    @GetMapping(value = "/cep/{cep}")
+    public ResponseEntity<List<AtividadesResponse>> findByValor(@PathVariable float valorVariado) {
+        var entity = service.findByValor( valorVariado );
+        if (Objects.isNull( entity )) return ResponseEntity.notFound().build();
+        var response = entity.stream().map( service::toResponse ).toList();
+        return ResponseEntity.ok( response );
     }
 
-    @DeleteMapping("/{precoVariado}")
-    public ResponseEntity<Void> deleteAtividades(@PathVariable float precoVariado) {
-        if (!atividadesRepository.existsById(precoVariado)) {
-            return ResponseEntity.notFound().build();
-        }
-        atividadesRepository.deleteById(precoVariado);
-        return ResponseEntity.noContent().build();
-    }
 
-    private AtividadesResponse toResponse(Atividades atividades) {
-        return AtividadesResponse.builder()
-                .precoVariado(atividades.getPrecoVariado())
-                .horarioAtual(atividades.getHorarioAtual())
-                .localizacaoAtual(atividades.getLocalizacaoAtual())
-                .climaAtual(atividades.getClimaAtual())
-                .qntdProcura(atividades.getQntdProcura())
-                .demanda(atividades.getDemanda())
-                .cliente(atividades.getCliente())
-                .build();
-    }
-
-    private Atividades toEntity(AtividadesRequest request) {
-        return Atividades.builder()
-                .precoVariado(request.getPrecoVariado())
-                .horarioAtual(request.getHorarioAtual())
-                .localizacaoAtual(request.getLocalizacaoAtual())
-                .climaAtual(request.getClimaAtual())
-                .qntdProcura(request.getQntdProcura())
-                .demanda(request.getDemanda())
-                .cliente(request.getCliente())
-                .build();
-    }
 }
 
 

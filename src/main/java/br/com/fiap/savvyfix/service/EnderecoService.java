@@ -1,80 +1,65 @@
 package br.com.fiap.savvyfix.service;
 
+import br.com.fiap.savvyfix.dto.request.ClienteRequest;
 import br.com.fiap.savvyfix.dto.request.EnderecoRequest;
+import br.com.fiap.savvyfix.dto.response.ClienteResponse;
 import br.com.fiap.savvyfix.dto.response.EnderecoResponse;
+import br.com.fiap.savvyfix.entity.Cliente;
 import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class EnderecoService {
-
-    private final EnderecoRepository enderecoRepository;
+public class EnderecoService implements ServiceDTO<Endereco, EnderecoRequest, EnderecoResponse>{
 
     @Autowired
-    public EnderecoService(EnderecoRepository enderecoRepository) {
-        this.enderecoRepository = enderecoRepository;
+    EnderecoRepository repo;
+
+    @Override
+    public Endereco toEntity( EnderecoRequest enderecoRequest) {
+
+        return Endereco.builder()
+                .cep( enderecoRequest.cep() )
+                .rua( enderecoRequest.rua() )
+                .numero( enderecoRequest.numero() )
+                .bairro( enderecoRequest.bairro())
+                .cidade( enderecoRequest.cidade())
+                .estado( enderecoRequest.estado())
+                .pais( enderecoRequest.pais())
+                .build();
     }
 
-    public List<EnderecoResponse> getAllEnderecos() {
-        return enderecoRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
+    @Override
+    public EnderecoResponse toResponse(Endereco endereco) {
+        return EnderecoResponse.builder()
+                .cep( endereco.getCep() )
+                .rua( endereco.getRua() )
+                .numero( endereco.getNumero() )
+                .bairro( endereco.getBairro())
+                .cidade( endereco.getCidade())
+                .estado( endereco.getEstado())
+                .pais( endereco.getPais())
+                .build();
     }
 
-    public EnderecoResponse getEnderecoByCep(String cep) {
-        return enderecoRepository.findByCep(cep)
-                .map(this::toResponse)
-                .orElse(null);
+    @Override
+    public Collection<Endereco> findAll() {
+        return repo.findAll();
     }
 
-    public EnderecoResponse createEndereco(EnderecoRequest request) {
-        Endereco endereco = toEntity(request);
-        endereco = enderecoRepository.save(endereco);
-        return toResponse(endereco);
+    public List<Endereco> findByCep(String cep) {
+        return repo.findByCep( cep );
     }
 
-    public EnderecoResponse updateEndereco(String cep, EnderecoRequest request) {
-        if (!enderecoRepository.existsById(cep)) {
-            return null;
-        }
-        Endereco endereco = toEntity(request);
-        endereco.setCep(cep);
-        endereco = enderecoRepository.save(endereco);
-        return toResponse(endereco);
+    @Override
+    public Endereco save(Endereco endereco) {
+        return repo.save( endereco );
     }
 
-    public void deleteEndereco(String cep) {
-        if (enderecoRepository.existsById(cep)) {
-            enderecoRepository.deleteById(cep);
-        }
-    }
-
-    private EnderecoResponse toResponse(Endereco endereco) {
-        return new EnderecoResponse(
-                endereco.getCep(),
-                endereco.getRua(),
-                endereco.getNumero(),
-                endereco.getBairro(),
-                endereco.getCidade(),
-                endereco.getEstado(),
-                endereco.getPais()
-        );
-    }
-
-    private Endereco toEntity(EnderecoRequest request) {
-        return new Endereco(
-                request.getCep(),
-                request.getRua(),
-                request.getNumero(),
-                request.getBairro(),
-                request.getCidade(),
-                request.getEstado(),
-                request.getPais()
-        );
-    }
 }

@@ -3,83 +3,55 @@ package br.com.fiap.savvyfix.resource;
 import br.com.fiap.savvyfix.dto.request.ProdutoRequest;
 import br.com.fiap.savvyfix.dto.response.ProdutoResponse;
 import br.com.fiap.savvyfix.entity.Produto;
-import br.com.fiap.savvyfix.repository.ProdutoRepository;
+import br.com.fiap.savvyfix.service.ProdutoService;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
+import java.net.URI;
+import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
+
 
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoResource {
 
-    private final ProdutoRepository produtoRepository;
-
     @Autowired
-    public ProdutoResource(ProdutoRepository produtoRepository) {
-        this.produtoRepository = produtoRepository;
-    }
+    ProdutoService service;
 
     @GetMapping
-    public ResponseEntity<List<ProdutoResponse>> getAllProdutos() {
-        List<ProdutoResponse> produtoResponses = produtoRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(produtoResponses);
+    public Collection<ProdutoResponse> findAll() {
+        var entity = service.findAll();
+        var response = entity
+                .stream().map( service::toResponse ).toList();
+        return response;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProdutoResponse> getProdutoById(@PathVariable Long id) {
-        return produtoRepository.findById(id)
-                .map(produto -> ResponseEntity.ok(toResponse(produto)))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
+    @Transactional
     @PostMapping
-    public ResponseEntity<ProdutoResponse> createProduto(@Valid @RequestBody ProdutoRequest request) {
-        Produto produto = toEntity(request);
-        produto = produtoRepository.save(produto);
-        return ResponseEntity.ok(toResponse(produto));
+    public ResponseEntity<ProdutoResponse> save(@RequestBody @Valid ProdutoRequest produto) {
+        var entity = service.toEntity( produto );
+        Produto save = service.save( entity );
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .replacePath( "/{id}" )
+                .buildAndExpand( save.getId() )
+                .toUri();
+        var response = service.toResponse( save );
+        return ResponseEntity.created( uri ).body( response );
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProdutoResponse> updateProduto(@PathVariable Long id, @Valid @RequestBody ProdutoRequest request) {
-        if (!produtoRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        Produto produto = toEntity(request);
-        produto.setId(id);
-        produto = produtoRepository.save(produto);
-        return ResponseEntity.ok(toResponse(produto));
+    @GetMapping(value = "/{id}")
+    public ProdutoResponse findById(@PathVariable Long id) {
+        return service.toResponse( service.findById( id ) );
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduto(@PathVariable Long id) {
-        if (!produtoRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        produtoRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
 
-    private ProdutoResponse toResponse(Produto produto) {
-        return ProdutoResponse.builder()
-                .nome(produto.getNome())
-                .descricao(produto.getDescricao())
-                .marca(produto.getMarca())
-                .precoFixo(produto.getPrecoFixo())
-                .build();
-    }
 
-    private Produto toEntity(ProdutoRequest request) {
-        return Produto.builder()
-                .nome(request.getNome())
-                .descricao(request.getDescricao())
-                .marca(request.getMarca())
-                .precoFixo(request.getPrecoFixo())
-                .build();
-    }
+
 }

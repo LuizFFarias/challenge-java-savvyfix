@@ -24,7 +24,7 @@ public class Compra {
 
     private String nomeProd;
 
-    private String qntdProd;
+    private int qntdProd;
 
     private float valorCompra;
 

@@ -3,74 +3,62 @@ package br.com.fiap.savvyfix.service;
 import br.com.fiap.savvyfix.dto.request.ClienteRequest;
 import br.com.fiap.savvyfix.dto.response.ClienteResponse;
 import br.com.fiap.savvyfix.entity.Cliente;
+import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class ClienteService {
-
-    private final ClienteRepository clienteRepository;
+public class ClienteService implements  ServiceDTO<Cliente, ClienteRequest, ClienteResponse>{
 
     @Autowired
-    public ClienteService(ClienteRepository clienteRepository) {
-        this.clienteRepository = clienteRepository;
-    }
+    private ClienteRepository repo;
 
-    public List<ClienteResponse> getAllClientes() {
-        return clienteRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
-    }
+    @Autowired
+    private EnderecoService enderecoService;
+    @Override
+    public Cliente toEntity(ClienteRequest clienteRequest) {
 
-    public ClienteResponse getClienteById(Long id) {
-        return clienteRepository.findById(id)
-                .map(this::toResponse)
-                .orElse(null);
-    }
+        Endereco endereco = null;
 
-    public ClienteResponse createCliente(ClienteRequest request) {
-        Cliente cliente = toEntity(request);
-        cliente = clienteRepository.save(cliente);
-        return toResponse(cliente);
-    }
-
-    public ClienteResponse updateCliente(Long id, ClienteRequest request) {
-        if (!clienteRepository.existsById(id)) {
-            return null;
+        if (Objects.nonNull( clienteRequest.endereco().cep() )) {
+            endereco = (Endereco) enderecoService.findByCep( clienteRequest.endereco().cep() );
         }
-        Cliente cliente = toEntity(request);
-        cliente.setId(id);
-        cliente = clienteRepository.save(cliente);
-        return toResponse(cliente);
+
+        return Cliente.builder()
+                .nome( clienteRequest.nome() )
+                .cpf( clienteRequest.cpf() )
+                .senha( clienteRequest.senha() )
+                .endereco( endereco )
+                .build();
     }
 
-    public void deleteCliente(Long id) {
-        if (clienteRepository.existsById(id)) {
-            clienteRepository.deleteById(id);
-        }
+    @Override
+    public ClienteResponse toResponse(Cliente cliente) {
+        return ClienteResponse.builder()
+                .nome( cliente.getNome() )
+                .cpf( cliente.getCpf() )
+                .senha( cliente.getSenha() )
+                .endereco( enderecoService.toResponse(cliente.getEndereco()) )
+                .build();
     }
 
-    private ClienteResponse toResponse(Cliente cliente) {
-        return new ClienteResponse(
-                cliente.getId(),
-                cliente.getNome(),
-                cliente.getCpf(),
-                cliente.getSenha(),
-                cliente.getEndereco()
-        );
+    @Override
+    public Collection<Cliente> findAll() {
+        return repo.findAll();
     }
 
-    private Cliente toEntity(ClienteRequest request) {
-        return new Cliente(
-                null, // O ID será gerado automaticamente pelo banco de dados
-                request.getNome(),
-                request.getCpf(),
-                request.getSenha(),
-                request.getEndereco()
-        );
+    @Override
+    public Cliente save(Cliente cliente) {
+        return repo.save( cliente );
+    }
+
+    public Cliente findById(Long id) {
+        return  repo.findById(id).orElse(null);
     }
 }

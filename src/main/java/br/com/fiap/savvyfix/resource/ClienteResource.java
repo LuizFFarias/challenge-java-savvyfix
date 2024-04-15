@@ -2,85 +2,63 @@ package br.com.fiap.savvyfix.resource;
 
 import br.com.fiap.savvyfix.dto.request.ClienteRequest;
 import br.com.fiap.savvyfix.dto.response.ClienteResponse;
+import br.com.fiap.savvyfix.dto.response.ProdutoResponse;
 import br.com.fiap.savvyfix.entity.Cliente;
+import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.repository.ClienteRepository;
+import br.com.fiap.savvyfix.service.ClienteService;
+import br.com.fiap.savvyfix.service.EnderecoService;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
+import java.net.URI;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/clientes")
 public class ClienteResource {
 
-    private final ClienteRepository clienteRepository;
+    @Autowired
+    private ClienteService service;
 
     @Autowired
-    public ClienteResource(ClienteRepository clienteRepository) {
-        this.clienteRepository = clienteRepository;
-    }
+    private EnderecoService enderecoService;
 
     @GetMapping
-    public ResponseEntity<List<ClienteResponse>> getAllClientes() {
-        List<ClienteResponse> clienteResponses = clienteRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(clienteResponses);
+    public Collection<ClienteResponse> findAll() {
+        var entity = service.findAll();
+        var response = entity
+                .stream().map( service::toResponse ).toList();
+        return response;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ClienteResponse> getClienteById(@PathVariable Long id) {
-        return clienteRepository.findById(id)
-                .map(cliente -> ResponseEntity.ok(toResponse(cliente)))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
+    @Transactional
     @PostMapping
-    public ResponseEntity<ClienteResponse> createCliente(@Valid @RequestBody ClienteRequest request) {
-        Cliente cliente = toEntity(request);
-        cliente = clienteRepository.save(cliente);
-        return ResponseEntity.ok(toResponse(cliente));
+    public ResponseEntity<ClienteResponse> save(@RequestBody @Valid ClienteRequest cliente) {
+        var entity = service.toEntity( cliente );
+        var endereco = enderecoService.findByCep( cliente.endereco().cep() );
+        if (Objects.nonNull( endereco )) entity.setEndereco((Endereco) endereco);
+        Cliente save = service.save( entity );
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .replacePath( "/{id}" )
+                .buildAndExpand( save.getId() )
+                .toUri();
+        var response = service.toResponse( save );
+        return ResponseEntity.created( uri ).body( response );
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ClienteResponse> updateCliente(@PathVariable Long id, @Valid @RequestBody ClienteRequest request) {
-        if (!clienteRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        Cliente cliente = toEntity(request);
-        cliente.setId(id);
-        cliente = clienteRepository.save(cliente);
-        return ResponseEntity.ok(toResponse(cliente));
+    @GetMapping(value = "/{id}")
+    public ClienteResponse findById(@PathVariable Long id) {
+        return service.toResponse( service.findById( id ) );
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCliente(@PathVariable Long id) {
-        if (!clienteRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        clienteRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
 
-    private ClienteResponse toResponse(Cliente cliente) {
-        return ClienteResponse.builder()
-                .id(cliente.getId())
-                .nome(cliente.getNome())
-                .cpf(cliente.getCpf())
-                .senha(cliente.getSenha())
-                .endereco(cliente.getEndereco())
-                .build();
-    }
-
-    private Cliente toEntity(ClienteRequest request) {
-        return Cliente.builder()
-                .nome(request.getNome())
-                .cpf(request.getCpf())
-                .senha(request.getSenha())
-                .endereco(request.getEndereco())
-                .build();
-    }
 }

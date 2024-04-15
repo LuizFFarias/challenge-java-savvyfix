@@ -1,79 +1,73 @@
 package br.com.fiap.savvyfix.service;
 import br.com.fiap.savvyfix.dto.request.AtividadesRequest;
 import br.com.fiap.savvyfix.dto.response.AtividadesResponse;
+import br.com.fiap.savvyfix.dto.response.ClienteResponse;
 import br.com.fiap.savvyfix.entity.Atividades;
+import br.com.fiap.savvyfix.entity.Cliente;
+import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.repository.AtividadesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class AtividadesService {
-
-    private final AtividadesRepository atividadesRepository;
+public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequest, AtividadesResponse>{
+    @Autowired
+    private AtividadesRepository repo;
 
     @Autowired
-    public AtividadesService(AtividadesRepository atividadesRepository) {
-        this.atividadesRepository = atividadesRepository;
-    }
+    private ClienteService clienteService;
 
-    public List<AtividadesResponse> getAllAtividades() {
-        return atividadesRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
-    }
+    @Override
+    public Atividades toEntity(AtividadesRequest atividadesRequest) {
 
-    public AtividadesResponse getAtividadesByPrecoVariado(float precoVariado) {
-        return atividadesRepository.findById(precoVariado)
-                .map(this::toResponse)
-                .orElse(null);
-    }
+        Cliente cliente = null;
 
-    public AtividadesResponse createAtividades(AtividadesRequest request) {
-        Atividades atividades = toEntity(request);
-        atividades = atividadesRepository.save(atividades);
-        return toResponse(atividades);
-    }
-
-    public AtividadesResponse updateAtividades(float precoVariado, AtividadesRequest request) {
-        if (!atividadesRepository.existsById(precoVariado)) {
-            return null;
+        if (Objects.nonNull( atividadesRequest.cliente().id() )) {
+            cliente = clienteService.findById( atividadesRequest.cliente().id() );
         }
-        Atividades atividades = toEntity(request);
-        atividades.setPrecoVariado(precoVariado);
-        atividades = atividadesRepository.save(atividades);
-        return toResponse(atividades);
+
+        return Atividades.builder()
+                .precoVariado(atividadesRequest.precoVariado() )
+                .horarioAtual( atividadesRequest.horarioAtual() )
+                .localizacaoAtual( atividadesRequest.localizacaoAtual() )
+                .climaAtual( atividadesRequest.climaAtual())
+                .qntdProcura( atividadesRequest.qntdProcura())
+                .demanda( atividadesRequest.demanda())
+                .cliente( cliente )
+                .build();
     }
 
-    public void deleteAtividades(float precoVariado) {
-        if (atividadesRepository.existsById(precoVariado)) {
-            atividadesRepository.deleteById(precoVariado);
-        }
+    @Override
+    public AtividadesResponse toResponse(Atividades atividades) {
+        return AtividadesResponse.builder()
+                .precoVariado( atividades.getPrecoVariado() )
+                .horarioAtual( atividades.getHorarioAtual() )
+                .localizacaoAtual( atividades.getLocalizacaoAtual() )
+                .climaAtual( atividades.getClimaAtual())
+                .qntdProcura( atividades.getQntdProcura())
+                .demanda( atividades.getDemanda())
+                .cliente( clienteService.toResponse(atividades.getCliente()) )
+                .build();
     }
 
-    private AtividadesResponse toResponse(Atividades atividades) {
-        return new AtividadesResponse(
-                atividades.getPrecoVariado(),
-                atividades.getHorarioAtual(),
-                atividades.getLocalizacaoAtual(),
-                atividades.getClimaAtual(),
-                atividades.getQntdProcura(),
-                atividades.getDemanda(),
-                atividades.getCliente()
-        );
+    @Override
+    public Collection<Atividades> findAll() {
+        return repo.findAll();
     }
 
-    private Atividades toEntity(AtividadesRequest request) {
-        return new Atividades(
-                request.getPrecoVariado(),
-                request.getHorarioAtual(),
-                request.getLocalizacaoAtual(),
-                request.getClimaAtual(),
-                request.getQntdProcura(),
-                request.getDemanda(),
-                request.getCliente()
-        );
+    @Override
+    public Atividades save(Atividades atividades) {
+        return repo.save( atividades );
     }
+
+    public List<Atividades> findByValor(float valorVariado) {
+        return repo.findByValor( valorVariado );
+    }
+
+
 }

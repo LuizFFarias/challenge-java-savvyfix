@@ -1,81 +1,85 @@
 package br.com.fiap.savvyfix.service;
+import br.com.fiap.savvyfix.dto.request.ClienteRequest;
 import br.com.fiap.savvyfix.dto.request.CompraRequest;
+import br.com.fiap.savvyfix.dto.response.ClienteResponse;
 import br.com.fiap.savvyfix.dto.response.CompraResponse;
-import br.com.fiap.savvyfix.entity.Compra;
+import br.com.fiap.savvyfix.entity.*;
 import br.com.fiap.savvyfix.repository.CompraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class CompraService {
-
-    private final CompraRepository compraRepository;
+public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraResponse>{
 
     @Autowired
-    public CompraService(CompraRepository compraRepository) {
-        this.compraRepository = compraRepository;
-    }
+    CompraRepository repo;
 
-    public List<CompraResponse> getAllCompras() {
-        return compraRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
-    }
+    @Autowired
+    AtividadesService atividadesService;
 
-    public CompraResponse getCompraById(Long id) {
-        return compraRepository.findById(id)
-                .map(this::toResponse)
-                .orElse(null);
-    }
+    @Autowired
+    ProdutoService produtoService;
 
-    public CompraResponse createCompra(CompraRequest request) {
-        Compra compra = toEntity(request);
-        compra = compraRepository.save(compra);
-        return toResponse(compra);
-    }
+    @Autowired
+    ClienteService clienteService;
 
-    public CompraResponse updateCompra(Long id, CompraRequest request) {
-        if (!compraRepository.existsById(id)) {
-            return null;
+    @Override
+    public Compra toEntity(CompraRequest compraRequest) {
+
+        Atividades atividades = null;
+        Produto produto = new Produto();
+        Cliente cliente = new Cliente();
+
+
+        if (Objects.nonNull( compraRequest.produto().id() )) return null;
+        if (Objects.nonNull( compraRequest.cliente().id() )) return null;
+
+        if (compraRequest.atividades().precoVariado() > 0) {
+            atividades = (Atividades) atividadesService.findByValor( compraRequest.atividades().precoVariado() );
         }
-        Compra compra = toEntity(request);
-        compra.setId(id);
-        compra = compraRepository.save(compra);
-        return toResponse(compra);
+        return Compra.builder()
+                .nomeProd( compraRequest.nomeProd() )
+                .qntdProd( compraRequest.qntdProd() )
+                .valorCompra( compraRequest.valorCompra() )
+                .especificacoes( compraRequest.especificacoes())
+                .atividades( atividades )
+                .produto( produto )
+                .cliente( cliente )
+                .build();
     }
 
-    public void deleteCompra(Long id) {
-        if (compraRepository.existsById(id)) {
-            compraRepository.deleteById(id);
-        }
+    @Override
+    public CompraResponse toResponse(Compra compra) {
+        return CompraResponse.builder()
+                .nomeProd( compra.getNomeProd() )
+                .qntdProd( compra.getQntdProd() )
+                .valorCompra( compra.getValorCompra() )
+                .especificacoes( compra.getEspecificacoes())
+                .atividades( atividadesService.toResponse(compra.getAtividades()) )
+                .produto( produtoService.toResponse(compra.getProduto()))
+                .cliente( clienteService.toResponse(compra.getCliente()))
+                .build();
     }
 
-    private CompraResponse toResponse(Compra compra) {
-        return new CompraResponse(
-                compra.getId(),
-                compra.getNomeProd(),
-                compra.getQntdProd(),
-                compra.getValorCompra(),
-                compra.getEspecificacoes(),
-                compra.getCliente(),
-                compra.getProduto(),
-                compra.getAtividades()
-        );
+    @Override
+    public Collection<Compra> findAll() {
+        return null;
     }
 
-    private Compra toEntity(CompraRequest request) {
-        return new Compra(
-                null, // O ID será gerado automaticamente pelo banco de dados
-                request.getNomeProd(),
-                request.getQntdProd(),
-                request.getValorCompra(),
-                request.getEspecificacoes(),
-                request.getCliente(),
-                request.getProduto(),
-                request.getAtividades()
-        );
+    @Override
+    public Compra save(Compra compra) {
+        return null;
+    }
+
+    public Compra findById(Long id) {
+        return  repo.findById(id).orElse(null);
     }
 }
+
+
+

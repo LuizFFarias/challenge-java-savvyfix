@@ -10,7 +10,7 @@ public record CompraResponse (
 
         Long id,
         String nomeProd,
-        String qntdProd,
+        int qntdProd,
         float valorCompra,
         String especificacoes,
 

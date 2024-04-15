@@ -8,7 +8,7 @@ public record CompraRequest (
         String nomeProd,
 
         @NotNull(message = "A quantidade de produtos é obrigatório")
-        String qntdProd,
+        int qntdProd,
 
         @NotNull(message = "O valor é obrigatório")
         float valorCompra,

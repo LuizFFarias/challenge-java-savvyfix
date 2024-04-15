@@ -1,92 +1,82 @@
 package br.com.fiap.savvyfix.resource;
 
+import br.com.fiap.savvyfix.dto.request.ClienteRequest;
 import br.com.fiap.savvyfix.dto.request.CompraRequest;
+import br.com.fiap.savvyfix.dto.response.AtividadesResponse;
+import br.com.fiap.savvyfix.dto.response.ClienteResponse;
 import br.com.fiap.savvyfix.dto.response.CompraResponse;
+import br.com.fiap.savvyfix.dto.response.ProdutoResponse;
+import br.com.fiap.savvyfix.entity.Atividades;
+import br.com.fiap.savvyfix.entity.Cliente;
 import br.com.fiap.savvyfix.entity.Compra;
+import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.repository.CompraRepository;
+import br.com.fiap.savvyfix.service.AtividadesService;
+import br.com.fiap.savvyfix.service.ClienteService;
+import br.com.fiap.savvyfix.service.CompraService;
+import br.com.fiap.savvyfix.service.ProdutoService;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
+import java.net.URI;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/compras")
 public class CompraResource {
 
-    private final CompraRepository compraRepository;
+    @Autowired
+    CompraService service;
 
     @Autowired
-    public CompraResource(CompraRepository compraRepository) {
-        this.compraRepository = compraRepository;
-    }
+    ProdutoService produtoService;
+
+    @Autowired
+    ClienteService clienteService;
+
+    @Autowired
+    AtividadesService atividadesService;
 
     @GetMapping
-    public ResponseEntity<List<CompraResponse>> getAllCompras() {
-        List<CompraResponse> compraResponses = compraRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(compraResponses);
+    public Collection<CompraResponse> findAll() {
+        var entity = service.findAll();
+        var response = entity
+                .stream().map( service::toResponse ).toList();
+        return response;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CompraResponse> getCompraById(@PathVariable Long id) {
-        return compraRepository.findById(id)
-                .map(compra -> ResponseEntity.ok(toResponse(compra)))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
+    @Transactional
     @PostMapping
-    public ResponseEntity<CompraResponse> createCompra(@Valid @RequestBody CompraRequest request) {
-        Compra compra = toEntity(request);
-        compra = compraRepository.save(compra);
-        return ResponseEntity.ok(toResponse(compra));
+    public ResponseEntity<CompraResponse> save(@RequestBody @Valid CompraRequest compra) {
+        var entity = service.toEntity( compra );
+        var produto = produtoService.findById( compra.produto().id());
+        var cliente = clienteService.findById( compra.cliente().id());
+        var atividades = atividadesService.findByValor(compra.atividades().precoVariado());
+
+        if (Objects.nonNull( produto )) entity.setProduto(produto);
+        if (Objects.nonNull( cliente )) entity.setCliente(cliente);
+        if (Objects.nonNull( atividades )) entity.setAtividades((Atividades) atividades);
+        Compra save = service.save( entity );
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .replacePath( "/{id}" )
+                .buildAndExpand( save.getId() )
+                .toUri();
+        var response = service.toResponse( save );
+        return ResponseEntity.created( uri ).body( response );
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CompraResponse> updateCompra(@PathVariable Long id, @Valid @RequestBody CompraRequest request) {
-        if (!compraRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        Compra compra = toEntity(request);
-        compra.setId(id);
-        compra = compraRepository.save(compra);
-        return ResponseEntity.ok(toResponse(compra));
+    @GetMapping(value = "/{id}")
+    public CompraResponse findById(@PathVariable Long id) {
+        return service.toResponse( service.findById( id ) );
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCompra(@PathVariable Long id) {
-        if (!compraRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        compraRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
 
-    private CompraResponse toResponse(Compra compra) {
-        return CompraResponse.builder()
-                .id(compra.getId())
-                .nomeProd(compra.getNomeProd())
-                .qntdProd(compra.getQntdProd())
-                .valorCompra(compra.getValorCompra())
-                .especificacoes(compra.getEspecificacoes())
-                .cliente(compra.getCliente())
-                .produto(compra.getProduto())
-                .atividades(compra.getAtividades())
-                .build();
-    }
-
-    private Compra toEntity(CompraRequest request) {
-        return Compra.builder()
-                .nomeProd(request.getNomeProd())
-                .qntdProd(request.getQntdProd())
-                .valorCompra(request.getValorCompra())
-                .especificacoes(request.getEspecificacoes())
-                .cliente(request.getCliente())
-                .produto(request.getProduto())
-                .atividades(request.getAtividades())
-                .build();
-    }
 }
