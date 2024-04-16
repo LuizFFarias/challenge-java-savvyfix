@@ -26,10 +26,13 @@ public class ClienteService implements  ServiceDTO<Cliente, ClienteRequest, Clie
 
         Endereco endereco = null;
 
-        if (Objects.nonNull( clienteRequest.endereco().cep() )) {
-            endereco = (Endereco) enderecoService.findByCep( clienteRequest.endereco().cep() );
-        }
+        if (Objects.nonNull(clienteRequest.endereco().cep())) {
+            List<Endereco> enderecos = enderecoService.findByCep(clienteRequest.endereco().cep());
 
+            if (!enderecos.isEmpty()) {
+                endereco = enderecos.get(0);
+            }
+        }
         return Cliente.builder()
                 .nome( clienteRequest.nome() )
                 .cpf( clienteRequest.cpf() )

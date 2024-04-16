@@ -39,8 +39,14 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
         if (Objects.nonNull( compraRequest.produto().id() )) return null;
         if (Objects.nonNull( compraRequest.cliente().id() )) return null;
 
-        if (compraRequest.atividades().precoVariado() > 0) {
-            atividades = (Atividades) atividadesService.findByPrecoVariado( compraRequest.atividades().precoVariado() );
+
+
+        if (Objects.nonNull(compraRequest.atividades().precoVariado())) {
+            List<Atividades> atividades1 = atividadesService.findByPrecoVariado(compraRequest.atividades().precoVariado());
+
+            if (!atividades1.isEmpty()) {
+                atividades = atividades1.get(0);
+            }
         }
         return Compra.builder()
                 .nomeProd( compraRequest.nomeProd() )
