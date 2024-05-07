@@ -14,18 +14,9 @@ public record AtividadesRequest (
         LocalTime horarioAtual,
 
         String localizacaoAtual,
-
         String  climaAtual,
-
-        @NotNull( message = "O campo de procura não pode ser nulo")
         int qntdProcura,
-
-        @NotNull( message = "O campo de demanda não pode ser nulo")
         String demanda,
-
         AbstractRequest cliente,
-
         AbstractRequest produto
-){
-
-}
+) {}

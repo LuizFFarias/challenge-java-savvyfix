@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 
-
 @Entity
 @Table(name = "PRODUTO")
 public class Produto {

@@ -17,9 +17,6 @@ public record CompraRequest (
         String especificacoes,
 
         AbstractRequest cliente,
-
         AbstractRequest produto,
-
         AtividadesRequest atividades
-){
-}
+) {}

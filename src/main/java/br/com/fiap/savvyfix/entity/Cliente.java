@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 
-
 @Entity
 @Table(name = "CLIENTE")
 public class Cliente {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_CLIENTE")
     @SequenceGenerator(name = "SQ_CLIENTE", sequenceName = "SQ_CLIENTE", allocationSize = 1)
@@ -32,10 +32,10 @@ public class Cliente {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(
-            name = "CEP_ENDERECO",
-            referencedColumnName = "CEP_ENDERECO",
+            name = "ID_ENDERECO",
+            referencedColumnName = "ID_ENDERECO",
             foreignKey = @ForeignKey(
-                    name = "CLIENTE_ENDERECO_FK"
+                    name = "ID_ENDERECO_FK"
             )
     )
 

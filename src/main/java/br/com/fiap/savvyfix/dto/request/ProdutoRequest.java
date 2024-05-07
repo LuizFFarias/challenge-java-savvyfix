@@ -14,5 +14,4 @@ public record ProdutoRequest (
 
         @NotNull(message = "O preço do produto é obrigatório")
         float precoFixo
-){
-}
+) {}
