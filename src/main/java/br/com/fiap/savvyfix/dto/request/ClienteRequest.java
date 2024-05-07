@@ -9,12 +9,11 @@ public record ClienteRequest (
         String nome,
 
         @CPF(message = "CPF inválido")
-        @NotNull(message = "O cpf é obrigatório")
+        @NotNull(message = "O CPF é obrigatório")
         String cpf,
 
         @NotNull(message = "A senha é obrigatória")
         String senha,
 
         EnderecoRequest endereco
-){
-}
+) {}

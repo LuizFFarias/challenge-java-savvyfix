@@ -11,18 +11,10 @@ public record AtividadesResponse (
 
         float precoVariado,
         LocalTime horarioAtual,
-
         String localizacaoAtual,
-
         String  climaAtual,
-
         int qntdProcura,
-
         String demanda,
-
         ClienteResponse cliente,
-
         ProdutoResponse produto
-){
-
-}
+) {}

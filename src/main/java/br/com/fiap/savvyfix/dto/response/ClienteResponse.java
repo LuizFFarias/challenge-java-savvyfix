@@ -10,7 +10,5 @@ public record ClienteResponse (
         String nome,
         String cpf,
         String senha,
-
         EnderecoResponse endereco
-) {
-}
+) {}

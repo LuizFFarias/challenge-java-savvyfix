@@ -13,11 +13,7 @@ public record CompraResponse (
         int qntdProd,
         float valorCompra,
         String especificacoes,
-
         ClienteResponse cliente,
-
         ProdutoResponse produto,
-
         AtividadesResponse atividades
-){
-}
+) {}
