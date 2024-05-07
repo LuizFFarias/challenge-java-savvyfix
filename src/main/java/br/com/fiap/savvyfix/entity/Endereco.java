@@ -11,12 +11,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 
-
 @Entity
 @Table(name = "ENDERECO")
 public class Endereco {
 
     @Id
+    @Column(name = "ID_ENDERECO")
+    private Long id;
+
     @Column(name = "CEP_ENDERECO")
     private String cep;
 
@@ -37,5 +39,4 @@ public class Endereco {
 
     @Column(name = "PAIS")
     private String pais;
-
 }

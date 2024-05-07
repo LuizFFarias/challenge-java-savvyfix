@@ -2,7 +2,7 @@
 # SavvyFix - Precificação dinâmica
 
 ## Lista dos integrantes:
-### Douglas Magalhães de Araujo - 552008
+Douglas Magalhães de Araujo - 552008
 <p>Responsável pelas pesquisas, diagramação e banco de dados.</p>
 
 ### Gustavo Argüello Bertacci - 551304
