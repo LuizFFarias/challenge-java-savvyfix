@@ -24,15 +24,8 @@ public class ClienteService implements  ServiceDTO<Cliente, ClienteRequest, Clie
     @Override
     public Cliente toEntity(ClienteRequest clienteRequest) {
 
-        Endereco endereco = null;
+        Endereco endereco = enderecoService.findById(clienteRequest.endereco().id());
 
-        if (Objects.nonNull(clienteRequest.endereco().cep())) {
-            List<Endereco> enderecos = enderecoService.findByCep(clienteRequest.endereco().cep());
-
-            if (!enderecos.isEmpty()) {
-                endereco = enderecos.get(0);
-            }
-        }
         return Cliente.builder()
                 .nome( clienteRequest.nome() )
                 .cpf( clienteRequest.cpf() )
@@ -46,7 +39,6 @@ public class ClienteService implements  ServiceDTO<Cliente, ClienteRequest, Clie
         return ClienteResponse.builder()
                 .nome( cliente.getNome() )
                 .cpf( cliente.getCpf() )
-                .senha( cliente.getSenha() )
                 .endereco( enderecoService.toResponse(cliente.getEndereco()) )
                 .build();
     }

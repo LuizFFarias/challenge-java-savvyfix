@@ -53,9 +53,7 @@ public class EnderecoService implements ServiceDTO<Endereco, EnderecoRequest, En
         return repo.findAll();
     }
 
-    public List<Endereco> findByCep(String cep) {
-        return repo.findByCep( cep );
-    }
+    public Endereco findById(Long id){return repo.findById(id).orElse(null);}
 
     @Override
     public Endereco save(Endereco endereco) {
