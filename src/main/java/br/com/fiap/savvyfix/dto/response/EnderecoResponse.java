@@ -6,6 +6,7 @@ import lombok.Builder;
 @Builder
 public record EnderecoResponse (
 
+        Long id,
         String cep,
         String rua,
         String numero,

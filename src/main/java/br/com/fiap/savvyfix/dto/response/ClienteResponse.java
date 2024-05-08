@@ -9,6 +9,5 @@ public record ClienteResponse (
         Long id,
         String nome,
         String cpf,
-        String senha,
         EnderecoResponse endereco
 ) {}
