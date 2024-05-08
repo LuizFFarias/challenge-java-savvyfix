@@ -36,10 +36,13 @@ public class ClienteService implements  ServiceDTO<Cliente, ClienteRequest, Clie
 
     @Override
     public ClienteResponse toResponse(Cliente cliente) {
+
+        var endereco = enderecoService.toResponse(cliente.getEndereco());
+
         return ClienteResponse.builder()
                 .nome( cliente.getNome() )
                 .cpf( cliente.getCpf() )
-                .endereco( enderecoService.toResponse(cliente.getEndereco()) )
+                .endereco(endereco)
                 .build();
     }
 

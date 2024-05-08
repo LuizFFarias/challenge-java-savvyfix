@@ -29,15 +29,8 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
     @Override
     public Atividades toEntity(AtividadesRequest atividadesRequest) {
 
-        Cliente cliente = null;
-        Produto produto = null;
-
-        if (Objects.nonNull( atividadesRequest.cliente().id() )) {
-            cliente = clienteService.findById( atividadesRequest.cliente().id() );
-        }
-        if (Objects.nonNull( atividadesRequest.produto().id() )) {
-            produto = produtoService.findById( atividadesRequest.cliente().id() );
-        }
+        Cliente cliente = clienteService.findById( atividadesRequest.cliente().id() );
+        Produto produto = produtoService.findById( atividadesRequest.cliente().id() );
 
         return Atividades.builder()
                 .precoVariado(atividadesRequest.precoVariado() )
@@ -53,6 +46,9 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
 
     @Override
     public AtividadesResponse toResponse(Atividades atividades) {
+        var cliente = clienteService.toResponse(atividades.getCliente());
+        var produto = produtoService.toResponse(atividades.getProduto());
+
         return AtividadesResponse.builder()
                 .precoVariado( atividades.getPrecoVariado() )
                 .horarioAtual( atividades.getHorarioAtual() )
@@ -60,8 +56,8 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
                 .climaAtual( atividades.getClimaAtual())
                 .qntdProcura( atividades.getQntdProcura())
                 .demanda( atividades.getDemanda())
-                .cliente( clienteService.toResponse(atividades.getCliente()) )
-                .produto( produtoService.toResponse(atividades.getProduto()))
+                .cliente( cliente )
+                .produto( produto )
                 .build();
     }
 

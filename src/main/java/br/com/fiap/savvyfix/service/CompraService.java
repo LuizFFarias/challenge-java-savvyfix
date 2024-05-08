@@ -32,14 +32,8 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
     public Compra toEntity(CompraRequest compraRequest) {
 
         Atividades atividades = null;
-        Produto produto = new Produto();
-        Cliente cliente = new Cliente();
-
-
-        if (Objects.nonNull( compraRequest.produto().id() )) return null;
-        if (Objects.nonNull( compraRequest.cliente().id() )) return null;
-
-
+        var produto = produtoService.findById(compraRequest.produto().id());
+        var cliente = clienteService.findById(compraRequest.cliente().id());
 
         if (Objects.nonNull(compraRequest.atividades().precoVariado())) {
             List<Atividades> atividades1 = atividadesService.findByPrecoVariado(compraRequest.atividades().precoVariado());

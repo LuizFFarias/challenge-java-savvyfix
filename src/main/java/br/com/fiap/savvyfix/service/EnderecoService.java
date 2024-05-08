@@ -1,19 +1,14 @@
 package br.com.fiap.savvyfix.service;
 
-import br.com.fiap.savvyfix.dto.request.ClienteRequest;
 import br.com.fiap.savvyfix.dto.request.EnderecoRequest;
-import br.com.fiap.savvyfix.dto.response.ClienteResponse;
 import br.com.fiap.savvyfix.dto.response.EnderecoResponse;
-import br.com.fiap.savvyfix.entity.Cliente;
 import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+
 
 @Service
 public class EnderecoService implements ServiceDTO<Endereco, EnderecoRequest, EnderecoResponse>{
