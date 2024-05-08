@@ -22,16 +22,16 @@ public class Compra {
     @Column(name = "ID_COMPRA")
     private Long id;
 
-    @Column(name = "NM_PROD")
+    @Column(name = "NM_PROD", nullable = false, length = 50)
     private String nomeProd;
 
-    @Column(name = "QNTD_PROD")
+    @Column(name = "QNTD_PROD", nullable = false, length = 3)
     private int qntdProd;
 
-    @Column(name = "VALOR_COMPRA")
+    @Column(name = "VALOR_COMPRA", nullable = false)
     private float valorCompra;
 
-    @Column(name = "ESPECIFICACAO_PROD")
+    @Column(name = "ESPECIFICACAO_PROD", nullable = false, length = 30)
     private  String especificacoes;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})

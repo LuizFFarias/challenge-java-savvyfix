@@ -25,16 +25,16 @@ public class Atividades {
     @Column(name = "HORARIO_ATUAL")
     private LocalTime horarioAtual;
 
-    @Column(name = "LOCALIZACAO_ATUAL")
+    @Column(name = "LOCALIZACAO_ATUAL", length = 50)
     private String localizacaoAtual;
 
-    @Column(name = "CLIMA_ATUAL")
+    @Column(name = "CLIMA_ATUAL", length = 20)
     private String  climaAtual;
 
-    @Column(name = "QNTD_PROCURA")
+    @Column(name = "QNTD_PROCURA", nullable = false, length = 10)
     private int qntdProcura;
 
-    @Column(name = "DEMANDA_PRODUTO")
+    @Column(name = "DEMANDA_PRODUTO", nullable = false, length = 2)
     private String demanda;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
