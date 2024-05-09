@@ -4,12 +4,12 @@ import br.com.fiap.savvyfix.dto.request.ProdutoRequest;
 import br.com.fiap.savvyfix.dto.response.ProdutoResponse;
 import br.com.fiap.savvyfix.entity.Produto;
 import br.com.fiap.savvyfix.service.ProdutoService;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -65,7 +65,7 @@ public class ProdutoResource implements ResourceDTO<ProdutoRequest, ProdutoRespo
 
 
 
-
+    @Override
     @Transactional
     @PostMapping
     public ResponseEntity<ProdutoResponse> save(@RequestBody @Valid ProdutoRequest produto) {

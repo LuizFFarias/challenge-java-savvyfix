@@ -25,7 +25,7 @@ public class Atividades {
     private Long id;
 
     @Column(name = "PRECO_VARIADO", nullable = false)
-    private float precoVariado;
+    private Float precoVariado;
 
     @Column(name = "HORARIO_ATUAL")
     private LocalTime horarioAtual;
@@ -37,7 +37,7 @@ public class Atividades {
     private String  climaAtual;
 
     @Column(name = "QNTD_PROCURA", nullable = false, length = 10)
-    private int qntdProcura;
+    private Integer qntdProcura;
 
     @Column(name = "DEMANDA_PRODUTO", nullable = false, length = 2)
     private String demanda;

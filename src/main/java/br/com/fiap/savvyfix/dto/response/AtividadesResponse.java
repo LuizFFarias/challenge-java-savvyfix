@@ -10,11 +10,11 @@ import java.time.LocalTime;
 public record AtividadesResponse (
 
         Long id,
-        float precoVariado,
+        Float precoVariado,
         LocalTime horarioAtual,
         String localizacaoAtual,
         String  climaAtual,
-        int qntdProcura,
+        Integer qntdProcura,
         String demanda,
         ClienteResponse cliente,
         ProdutoResponse produto

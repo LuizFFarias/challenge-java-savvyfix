@@ -26,10 +26,10 @@ public class Compra {
     private String nomeProd;
 
     @Column(name = "QNTD_PROD", nullable = false, length = 3)
-    private int qntdProd;
+    private Integer qntdProd;
 
     @Column(name = "VALOR_COMPRA", nullable = false)
-    private float valorCompra;
+    private Float valorCompra;
 
     @Column(name = "ESPECIFICACAO_PROD", nullable = false, length = 30)
     private  String especificacoes;
@@ -59,7 +59,7 @@ public class Compra {
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(
             name = "PRECO_VARIADO",
-            referencedColumnName = "PRECO_VARIADO",
+            referencedColumnName = "ID_ATIVIDADES",
             foreignKey = @ForeignKey(
                     name = "COMPRA_ATIVIDADES_FK"
             )
