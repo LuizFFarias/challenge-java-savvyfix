@@ -50,15 +50,36 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
 
     @Override
     public CompraResponse toResponse(Compra compra) {
-        return CompraResponse.builder()
-                .nomeProd( compra.getNomeProd() )
-                .qntdProd( compra.getQntdProd() )
-                .valorCompra( compra.getValorCompra() )
-                .especificacoes( compra.getEspecificacoes())
-                .atividades( atividadesService.toResponse(compra.getAtividades()) )
-                .produto( produtoService.toResponse(compra.getProduto()))
-                .cliente( clienteService.toResponse(compra.getCliente()))
-                .build();
+        var atividades = atividadesService.toResponse(compra.getAtividades());
+        var produto = produtoService.toResponse(compra.getProduto());
+        var cliente = clienteService.toResponse(compra.getCliente());
+
+        if (Objects.nonNull(atividades) && atividades.precoVariado() > 0){
+            var precoVariado = atividades.precoVariado();
+            var qntdProd = compra.getQntdProd();
+            Float valorCompra = precoVariado * qntdProd;
+
+            return CompraResponse.builder()
+                    .nomeProd( compra.getNomeProd() )
+                    .qntdProd( compra.getQntdProd() )
+                    .valorCompra( valorCompra )
+                    .especificacoes( compra.getEspecificacoes())
+                    .atividades( atividades )
+                    .produto( produto )
+                    .cliente( cliente )
+                    .build();
+        } else {
+            return CompraResponse.builder()
+                    .nomeProd( compra.getNomeProd() )
+                    .qntdProd( compra.getQntdProd() )
+                    .valorCompra( compra.getValorCompra() )
+                    .especificacoes( compra.getEspecificacoes())
+                    .atividades( atividades )
+                    .produto( produto )
+                    .cliente( cliente )
+                    .build();
+        }
+
     }
 
     @Override
