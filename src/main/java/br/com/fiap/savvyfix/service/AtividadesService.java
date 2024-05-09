@@ -31,7 +31,7 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
     public Atividades toEntity(AtividadesRequest atividadesRequest) {
 
         Cliente cliente = clienteService.findById( atividadesRequest.cliente().id() );
-        Produto produto = produtoService.findById( atividadesRequest.cliente().id() );
+        Produto produto = produtoService.findById( atividadesRequest.produto().id() );
 
         return Atividades.builder()
                 .precoVariado(atividadesRequest.precoVariado() )
