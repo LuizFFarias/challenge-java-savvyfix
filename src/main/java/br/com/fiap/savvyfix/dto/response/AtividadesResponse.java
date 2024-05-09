@@ -9,6 +9,7 @@ import java.time.LocalTime;
 @Builder
 public record AtividadesResponse (
 
+        Long id,
         float precoVariado,
         LocalTime horarioAtual,
         String localizacaoAtual,

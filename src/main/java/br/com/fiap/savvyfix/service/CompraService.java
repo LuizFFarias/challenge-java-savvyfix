@@ -31,17 +31,11 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
     @Override
     public Compra toEntity(CompraRequest compraRequest) {
 
-        Atividades atividades = null;
+
         var produto = produtoService.findById(compraRequest.produto().id());
         var cliente = clienteService.findById(compraRequest.cliente().id());
+        var atividades = atividadesService.findById(compraRequest.atividades().id());
 
-        if (Objects.nonNull(compraRequest.atividades().precoVariado())) {
-            List<Atividades> atividades1 = atividadesService.findByPrecoVariado(compraRequest.atividades().precoVariado());
-
-            if (!atividades1.isEmpty()) {
-                atividades = atividades1.get(0);
-            }
-        }
         return Compra.builder()
                 .nomeProd( compraRequest.nomeProd() )
                 .qntdProd( compraRequest.qntdProd() )
@@ -68,12 +62,12 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
 
     @Override
     public Collection<Compra> findAll() {
-        return null;
+        return repo.findAll();
     }
 
     @Override
     public Compra save(Compra compra) {
-        return null;
+        return repo.save(compra);
     }
 
     public Compra findById(Long id) {

@@ -19,7 +19,12 @@ import java.time.LocalTime;
 public class Atividades {
 
     @Id
-    @Column(name = "PRECO_VARIADO")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_ATIVIDADES")
+    @SequenceGenerator(name = "SQ_ATIVIDADES", sequenceName = "SQ_ATIVIDADES", allocationSize = 1)
+    @Column(name = "ID_ATIVIDADES")
+    private Long id;
+
+    @Column(name = "PRECO_VARIADO", nullable = false)
     private float precoVariado;
 
     @Column(name = "HORARIO_ATUAL")

@@ -50,6 +50,7 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
         var produto = produtoService.toResponse(atividades.getProduto());
 
         return AtividadesResponse.builder()
+                .id(atividades.getId())
                 .precoVariado( atividades.getPrecoVariado() )
                 .horarioAtual( atividades.getHorarioAtual() )
                 .localizacaoAtual( atividades.getLocalizacaoAtual() )
@@ -71,9 +72,7 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
         return repo.save( atividades );
     }
 
-    public List<Atividades> findByPrecoVariado(float precoVariado) {
-        return repo.findByPrecoVariado( precoVariado );
-    }
+    public Atividades findById(Long id) {return repo.findById(id).orElse(null);}
 
 
 }

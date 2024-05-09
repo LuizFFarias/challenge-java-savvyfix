@@ -40,6 +40,7 @@ public class ClienteService implements  ServiceDTO<Cliente, ClienteRequest, Clie
         var endereco = enderecoService.toResponse(cliente.getEndereco());
 
         return ClienteResponse.builder()
+                .id(cliente.getId())
                 .nome( cliente.getNome() )
                 .cpf( cliente.getCpf() )
                 .endereco(endereco)

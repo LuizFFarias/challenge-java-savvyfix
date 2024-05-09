@@ -24,5 +24,5 @@ public record CompraRequest (
         AbstractRequest produto,
 
         @Valid
-        AtividadesRequest atividades
+        AbstractRequest atividades
 ) {}

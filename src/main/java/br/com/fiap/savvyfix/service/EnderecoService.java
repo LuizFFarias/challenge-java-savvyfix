@@ -33,6 +33,7 @@ public class EnderecoService implements ServiceDTO<Endereco, EnderecoRequest, En
     @Override
     public EnderecoResponse toResponse(Endereco endereco) {
         return EnderecoResponse.builder()
+                .id(endereco.getId())
                 .cep( endereco.getCep() )
                 .rua( endereco.getRua() )
                 .numero( endereco.getNumero() )

@@ -31,6 +31,7 @@ public class ProdutoService implements ServiceDTO<Produto, ProdutoRequest, Produ
     @Override
     public ProdutoResponse toResponse(Produto produto) {
         return ProdutoResponse.builder()
+                .id(produto.getId())
                 .nome( produto.getNome() )
                 .descricao( produto.getDescricao() )
                 .marca( produto.getMarca() )
