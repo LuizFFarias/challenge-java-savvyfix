@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 @Builder
 
 @Entity
-@Table(name = "CLIENTE")
+@Table(name = "CLIENTE", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_CPF_CLIENTE", columnNames = "CPF_CLIE")
+})
 public class Cliente {
 
     @Id
@@ -21,13 +23,13 @@ public class Cliente {
     @Column(name = "ID_CLIENTE")
     private Long id;
 
-    @Column(name = "NM_CLIE")
+    @Column(name = "NM_CLIE", nullable = false, length = 50)
     private String nome;
 
-    @Column(name = "CPF_CLIE", length = 11)
+    @Column(name = "CPF_CLIE", nullable = false, length = 11)
     private String cpf;
 
-    @Column(name = "SENHA_CLIE")
+    @Column(name = "SENHA_CLIE", nullable = false, length = 50 )
     private  String senha;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})

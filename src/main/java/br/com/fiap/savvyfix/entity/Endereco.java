@@ -16,27 +16,29 @@ import lombok.NoArgsConstructor;
 public class Endereco {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_ENDERECO")
+    @SequenceGenerator(name = "SQ_ENDERECO", sequenceName = "SQ_ENDERECO", allocationSize = 1)
     @Column(name = "ID_ENDERECO")
     private Long id;
 
-    @Column(name = "CEP_ENDERECO")
+    @Column(name = "CEP_ENDERECO", nullable = false, length = 8)
     private String cep;
 
-    @Column(name = "RUA_ENDERECO")
+    @Column(name = "RUA_ENDERECO", nullable = false, length = 50)
     private String rua;
 
-    @Column(name = "NUM_ENDERECO")
+    @Column(name = "NUM_ENDERECO", nullable = false, length = 20)
     private String numero;
 
-    @Column(name = "BAIRRO_ENDERECO")
+    @Column(name = "BAIRRO_ENDERECO", nullable = false, length = 50)
     private String bairro;
 
-    @Column(name = "CIDADE_ENDERECO")
+    @Column(name = "CIDADE_ENDERECO", nullable = false, length = 50)
     private String cidade;
 
-    @Column(name = "ESTADO_ENDERECO")
+    @Column(name = "ESTADO_ENDERECO", nullable = false, length = 2)
     private String estado;
 
-    @Column(name = "PAIS")
+    @Column(name = "PAIS", nullable = false)
     private String pais;
 }

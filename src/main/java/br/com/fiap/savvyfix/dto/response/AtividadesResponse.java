@@ -9,11 +9,12 @@ import java.time.LocalTime;
 @Builder
 public record AtividadesResponse (
 
-        float precoVariado,
+        Long id,
+        Float precoVariado,
         LocalTime horarioAtual,
         String localizacaoAtual,
         String  climaAtual,
-        int qntdProcura,
+        Integer qntdProcura,
         String demanda,
         ClienteResponse cliente,
         ProdutoResponse produto

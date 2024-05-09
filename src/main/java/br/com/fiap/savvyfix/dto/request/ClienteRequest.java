@@ -1,5 +1,6 @@
 package br.com.fiap.savvyfix.dto.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -15,5 +16,6 @@ public record ClienteRequest (
         @NotNull(message = "A senha é obrigatória")
         String senha,
 
-        EnderecoRequest endereco
+        @Valid
+        AbstractRequest endereco
 ) {}

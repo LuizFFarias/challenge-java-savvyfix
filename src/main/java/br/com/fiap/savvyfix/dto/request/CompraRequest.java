@@ -1,5 +1,6 @@
 package br.com.fiap.savvyfix.dto.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 public record CompraRequest (
@@ -8,15 +9,20 @@ public record CompraRequest (
         String nomeProd,
 
         @NotNull(message = "A quantidade de produtos é obrigatório")
-        int qntdProd,
+        Integer qntdProd,
 
         @NotNull(message = "O valor é obrigatório")
-        float valorCompra,
+        Float valorCompra,
 
         @NotNull(message = "As especificacoes são obrigatórias")
         String especificacoes,
 
+        @Valid
         AbstractRequest cliente,
+
+        @Valid
         AbstractRequest produto,
-        AtividadesRequest atividades
+
+        @Valid
+        AbstractRequest atividades
 ) {}

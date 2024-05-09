@@ -6,6 +6,7 @@ import br.com.fiap.savvyfix.entity.Cliente;
 import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -24,15 +25,8 @@ public class ClienteService implements  ServiceDTO<Cliente, ClienteRequest, Clie
     @Override
     public Cliente toEntity(ClienteRequest clienteRequest) {
 
-        Endereco endereco = null;
+        Endereco endereco = enderecoService.findById(clienteRequest.endereco().id());
 
-        if (Objects.nonNull(clienteRequest.endereco().cep())) {
-            List<Endereco> enderecos = enderecoService.findByCep(clienteRequest.endereco().cep());
-
-            if (!enderecos.isEmpty()) {
-                endereco = enderecos.get(0);
-            }
-        }
         return Cliente.builder()
                 .nome( clienteRequest.nome() )
                 .cpf( clienteRequest.cpf() )
@@ -43,11 +37,14 @@ public class ClienteService implements  ServiceDTO<Cliente, ClienteRequest, Clie
 
     @Override
     public ClienteResponse toResponse(Cliente cliente) {
+
+        var endereco = enderecoService.toResponse(cliente.getEndereco());
+
         return ClienteResponse.builder()
+                .id(cliente.getId())
                 .nome( cliente.getNome() )
                 .cpf( cliente.getCpf() )
-                .senha( cliente.getSenha() )
-                .endereco( enderecoService.toResponse(cliente.getEndereco()) )
+                .endereco(endereco)
                 .build();
     }
 
@@ -59,6 +56,11 @@ public class ClienteService implements  ServiceDTO<Cliente, ClienteRequest, Clie
     @Override
     public Cliente save(Cliente cliente) {
         return repo.save( cliente );
+    }
+
+    @Override
+    public List<Cliente> findAll(Example<Cliente> example) {
+        return repo.findAll(example);
     }
 
     public Cliente findById(Long id) {

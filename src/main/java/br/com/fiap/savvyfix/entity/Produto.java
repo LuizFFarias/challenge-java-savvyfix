@@ -21,15 +21,15 @@ public class Produto {
     @Column(name = "ID_PROD")
     private Long id;
 
-    @Column(name = "NM_PROD")
+    @Column(name = "NM_PROD", nullable = false, length = 50)
     private  String nome;
 
-    @Column(name = "DESC_PROD")
+    @Column(name = "DESC_PROD", nullable = false, length = 50)
     private String descricao;
 
-    @Column(name = "MARCA_PROD")
+    @Column(name = "MARCA_PROD", nullable = false, length = 15)
     private String marca;
 
-    @Column(name = "PRECO_FIXO")
-    private float precoFixo;
+    @Column(name = "PRECO_FIXO", nullable = false)
+    private Float precoFixo;
 }

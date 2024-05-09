@@ -22,16 +22,16 @@ public class Compra {
     @Column(name = "ID_COMPRA")
     private Long id;
 
-    @Column(name = "NM_PROD")
+    @Column(name = "NM_PROD", nullable = false, length = 50)
     private String nomeProd;
 
-    @Column(name = "QNTD_PROD")
-    private int qntdProd;
+    @Column(name = "QNTD_PROD", nullable = false, length = 3)
+    private Integer qntdProd;
 
-    @Column(name = "VALOR_COMPRA")
-    private float valorCompra;
+    @Column(name = "VALOR_COMPRA", nullable = false)
+    private Float valorCompra;
 
-    @Column(name = "ESPECIFICACAO_PROD")
+    @Column(name = "ESPECIFICACAO_PROD", nullable = false, length = 30)
     private  String especificacoes;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
@@ -59,7 +59,7 @@ public class Compra {
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(
             name = "PRECO_VARIADO",
-            referencedColumnName = "PRECO_VARIADO",
+            referencedColumnName = "ID_ATIVIDADES",
             foreignKey = @ForeignKey(
                     name = "COMPRA_ATIVIDADES_FK"
             )

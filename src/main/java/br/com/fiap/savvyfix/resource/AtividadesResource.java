@@ -1,33 +1,29 @@
 package br.com.fiap.savvyfix.resource;
 
 import br.com.fiap.savvyfix.dto.request.AtividadesRequest;
-import br.com.fiap.savvyfix.dto.request.ClienteRequest;
 import br.com.fiap.savvyfix.dto.response.AtividadesResponse;
-import br.com.fiap.savvyfix.dto.response.ClienteResponse;
-import br.com.fiap.savvyfix.dto.response.EnderecoResponse;
 import br.com.fiap.savvyfix.entity.Atividades;
 import br.com.fiap.savvyfix.entity.Cliente;
-import br.com.fiap.savvyfix.entity.Endereco;
-import br.com.fiap.savvyfix.repository.AtividadesRepository;
+import br.com.fiap.savvyfix.entity.Produto;
 import br.com.fiap.savvyfix.service.AtividadesService;
 import br.com.fiap.savvyfix.service.ClienteService;
 import br.com.fiap.savvyfix.service.ProdutoService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
+import java.time.LocalTime;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/atividades")
-public class AtividadesResource {
+public class AtividadesResource implements ResourceDTO<AtividadesRequest, AtividadesResponse>{
 
     @Autowired
     AtividadesService service;
@@ -39,39 +35,74 @@ public class AtividadesResource {
     ProdutoService produtoService;
 
     @GetMapping
-    public Collection<AtividadesResponse> findAll() {
-        var entity = service.findAll();
-        var response = entity
-                .stream().map( service::toResponse ).toList();
-        return response;
+    public ResponseEntity<Collection<AtividadesResponse>> findAll(
+            @RequestParam(name = "horario", required = false) LocalTime horario,
+            @RequestParam(name = "localizacao", required = false) String localizacao,
+            @RequestParam(name = "demanda", required = false) String demanda,
+            @RequestParam(name = "qntdProcura", required = false) Integer procura,
+            @RequestParam(name = "clima", required = false) String clima,
+            @RequestParam(name = "precoVariado", required = false) Float precoVariado,
+            @RequestParam(name = "cliente.cpf", required = false) String cpfCliente,
+            @RequestParam(name = "produto.nome", required = false) String nomeProduto
+            ){
+        var cliente = Cliente.builder()
+                .cpf(cpfCliente)
+                .build();
+
+        var produto = Produto.builder()
+                .nome(nomeProduto)
+                .build();
+
+        var atividades = Atividades.builder()
+                .horarioAtual(horario)
+                .localizacaoAtual(localizacao)
+                .demanda(demanda)
+                .qntdProcura(procura)
+                .climaAtual(clima)
+                .precoVariado(precoVariado)
+                .cliente(cliente)
+                .produto(produto)
+                .build();
+
+        ExampleMatcher matcher = ExampleMatcher
+                .matchingAll()
+                .withIgnoreCase()
+                .withIgnoreNullValues();
+
+        Example<Atividades> example = Example.of(atividades, matcher);
+
+        Collection<Atividades> all = service.findAll(example);
+        if (Objects.isNull(all) || all.isEmpty()) return ResponseEntity.notFound().build();
+        var response = all.stream().map(service::toResponse).toList();
+        return ResponseEntity.ok(response);
+    };
+
+
+    @Override
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<AtividadesResponse> findById(@PathVariable Long id) {
+        var encontrado = service.findById( id );
+        if (encontrado == null) return ResponseEntity.notFound().build();
+        var resposta = service.toResponse( encontrado );
+        return ResponseEntity.ok( resposta );
     }
 
     @Transactional
     @PostMapping
     public ResponseEntity<AtividadesResponse> save(@RequestBody @Valid AtividadesRequest atividades) {
         var entity = service.toEntity( atividades );
-        var cliente = clienteService.findById( atividades.cliente().id() );
-        var produto = produtoService.findById(atividades.produto().id());
-        if (Objects.nonNull( cliente )) entity.setCliente(cliente);
-        Atividades save = service.save( entity );
-        if (Objects.nonNull( produto )) entity.setProduto(produto);
-        service.save( entity );
-        URI uri = ServletUriComponentsBuilder
+        var saved = service.save( entity );
+        var resposta = service.toResponse( saved );
+
+        var uri = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
-                .replacePath( "/{precoVariado}" )
-                .buildAndExpand( save.getPrecoVariado() )
+                .path("/{id}")
+                .buildAndExpand(saved.getId())
                 .toUri();
-        var response = service.toResponse( save );
-        return ResponseEntity.created( uri ).body( response );
+
+        return ResponseEntity.created( uri ).body(resposta);
     }
 
-    @GetMapping(value = "/precoVariado/{precoVariado}")
-    public ResponseEntity<List<AtividadesResponse>> findByValor(@PathVariable float precoVariado) {
-        var entity = service.findByPrecoVariado( precoVariado );
-        if (Objects.isNull( entity )) return ResponseEntity.notFound().build();
-        var response = entity.stream().map( service::toResponse ).toList();
-        return ResponseEntity.ok( response );
-    }
 
 
 }

@@ -8,6 +8,7 @@ import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.entity.Produto;
 import br.com.fiap.savvyfix.repository.AtividadesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -29,15 +30,8 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
     @Override
     public Atividades toEntity(AtividadesRequest atividadesRequest) {
 
-        Cliente cliente = null;
-        Produto produto = null;
-
-        if (Objects.nonNull( atividadesRequest.cliente().id() )) {
-            cliente = clienteService.findById( atividadesRequest.cliente().id() );
-        }
-        if (Objects.nonNull( atividadesRequest.produto().id() )) {
-            produto = produtoService.findById( atividadesRequest.cliente().id() );
-        }
+        Cliente cliente = clienteService.findById( atividadesRequest.cliente().id() );
+        Produto produto = produtoService.findById( atividadesRequest.produto().id() );
 
         return Atividades.builder()
                 .precoVariado(atividadesRequest.precoVariado() )
@@ -53,15 +47,19 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
 
     @Override
     public AtividadesResponse toResponse(Atividades atividades) {
+        var cliente = clienteService.toResponse(atividades.getCliente());
+        var produto = produtoService.toResponse(atividades.getProduto());
+
         return AtividadesResponse.builder()
+                .id(atividades.getId())
                 .precoVariado( atividades.getPrecoVariado() )
                 .horarioAtual( atividades.getHorarioAtual() )
                 .localizacaoAtual( atividades.getLocalizacaoAtual() )
                 .climaAtual( atividades.getClimaAtual())
                 .qntdProcura( atividades.getQntdProcura())
                 .demanda( atividades.getDemanda())
-                .cliente( clienteService.toResponse(atividades.getCliente()) )
-                .produto( produtoService.toResponse(atividades.getProduto()))
+                .cliente( cliente )
+                .produto( produto )
                 .build();
     }
 
@@ -75,9 +73,12 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
         return repo.save( atividades );
     }
 
-    public List<Atividades> findByPrecoVariado(float precoVariado) {
-        return repo.findByPrecoVariado( precoVariado );
+    @Override
+    public List<Atividades> findAll(Example<Atividades> example) {
+        return repo.findAll(example);
     }
+
+    public Atividades findById(Long id) {return repo.findById(id).orElse(null);}
 
 
 }
