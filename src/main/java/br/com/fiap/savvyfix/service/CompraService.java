@@ -60,6 +60,7 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
             Float valorCompra = precoVariado * qntdProd;
 
             return CompraResponse.builder()
+                    .id(compra.getId())
                     .nomeProd( compra.getNomeProd() )
                     .qntdProd( compra.getQntdProd() )
                     .valorCompra( valorCompra )
@@ -70,6 +71,7 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
                     .build();
         } else {
             return CompraResponse.builder()
+                    .id(compra.getId())
                     .nomeProd( compra.getNomeProd() )
                     .qntdProd( compra.getQntdProd() )
                     .valorCompra( compra.getValorCompra() )
