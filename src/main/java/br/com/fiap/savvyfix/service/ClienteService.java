@@ -6,6 +6,7 @@ import br.com.fiap.savvyfix.entity.Cliente;
 import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -55,6 +56,11 @@ public class ClienteService implements  ServiceDTO<Cliente, ClienteRequest, Clie
     @Override
     public Cliente save(Cliente cliente) {
         return repo.save( cliente );
+    }
+
+    @Override
+    public List<Cliente> findAll(Example<Cliente> example) {
+        return repo.findAll(example);
     }
 
     public Cliente findById(Long id) {

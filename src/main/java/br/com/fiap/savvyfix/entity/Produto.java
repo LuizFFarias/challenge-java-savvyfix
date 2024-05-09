@@ -31,5 +31,5 @@ public class Produto {
     private String marca;
 
     @Column(name = "PRECO_FIXO", nullable = false)
-    private float precoFixo;
+    private Float precoFixo;
 }

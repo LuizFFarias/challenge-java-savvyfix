@@ -10,5 +10,5 @@ public record ProdutoResponse (
         String nome,
         String descricao,
         String marca,
-        float precoFixo
+        Float precoFixo
 ) {}

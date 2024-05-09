@@ -8,6 +8,7 @@ import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.entity.Produto;
 import br.com.fiap.savvyfix.repository.AtividadesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -70,6 +71,11 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
     @Override
     public Atividades save(Atividades atividades) {
         return repo.save( atividades );
+    }
+
+    @Override
+    public List<Atividades> findAll(Example<Atividades> example) {
+        return repo.findAll(example);
     }
 
     public Atividades findById(Long id) {return repo.findById(id).orElse(null);}

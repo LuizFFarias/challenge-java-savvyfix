@@ -5,9 +5,11 @@ import br.com.fiap.savvyfix.dto.response.EnderecoResponse;
 import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 
 @Service
@@ -54,6 +56,11 @@ public class EnderecoService implements ServiceDTO<Endereco, EnderecoRequest, En
     @Override
     public Endereco save(Endereco endereco) {
         return repo.save( endereco );
+    }
+
+    @Override
+    public List<Endereco> findAll(Example<Endereco> example) {
+        return repo.findAll(example);
     }
 
 }

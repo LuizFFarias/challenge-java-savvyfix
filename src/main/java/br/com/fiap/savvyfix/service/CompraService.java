@@ -6,6 +6,7 @@ import br.com.fiap.savvyfix.dto.response.CompraResponse;
 import br.com.fiap.savvyfix.entity.*;
 import br.com.fiap.savvyfix.repository.CompraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -68,6 +69,11 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
     @Override
     public Compra save(Compra compra) {
         return repo.save(compra);
+    }
+
+    @Override
+    public List<Compra> findAll(Example<Compra> example) {
+        return repo.findAll(example);
     }
 
     public Compra findById(Long id) {
