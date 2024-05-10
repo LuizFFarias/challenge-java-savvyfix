@@ -15,8 +15,9 @@
 <p>Responsável pela documentação, banco de dados, prototipação e pitch.</p>
 
 ## Instrução de como rodar a aplicação
-<p>Para o funcionamento deve certificar das configurações da IDE.</p>
-<p>Inicie o projeto e verifique as respostas dos endpoints pelo endereço do localhost.</p>
+<p>1. Certificar as configurações da IDE.</p>
+<p>2. Iniciar o projeto.</p>
+<p>3. Verificar as respostas dos endpoints pelo endereço do localhost.</p>
 
 ## Imagens dos Diagramas
 
