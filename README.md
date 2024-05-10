@@ -3,16 +3,16 @@
 
 ## Lista dos integrantes:
 #### 1. Douglas Magalhães de Araujo - 552008
-<p>Responsável pelas pesquisas, diagramação e banco de dados.</p>
+<p>Responsável principal pelo desenvolvimento front e pesquisa.</p>
 
 #### 2. Gustavo Argüello Bertacci - 551304
-<p>Responsável por Java e pelo suporte.</p>
+<p>Responsável pelo desenvolvimento back e pelo suporte.</p>
 
 #### 3. Luiz Fillipe Farias - 99519
-<p>Responsável principal por Java e pesquisa.</p>
+<p>Responsável principal pelo desenvolvimento back e pesquisa.</p>
 
 #### 4. Rafaella Monique do Carmo Bastos - 552425
-<p>Responsável pela documentação, banco de dados, prototipação e pitch.</p><br>
+<p>Responsável pela documentação, banco de dados e desenvolvimento back/front.</p><br>
 
 ## Instrução de como rodar a aplicação
 <p>1. Certificar as configurações da IDE.</p>
