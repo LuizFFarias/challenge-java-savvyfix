@@ -27,7 +27,11 @@
 ![](documentacao/diagramas/WhatsApp%20Image%202024-04-11%20at%2019.10.30.jpeg)
 
 ### Diagrama de Classes
-![](documentacao/diagramas/diagrama_entidades.jpeg.png) <br>
+![](documentacao/diagramas/diagrama_entidades.jpeg.png)
+
+### Arquitetura da solução
+![Arquitetura_Software_SavvyFix](https://github.com/LuizFFarias/challenge-java-savvyfix/assets/85761347/c52c0a08-ca81-4da3-9e36-8e4dcd84dc33)
+
 
 ## Link do pitch
 https://youtu.be/ltPanBm_5ks <br>
