@@ -69,7 +69,7 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
     }
 
     @Override
-    public List<Atividades> findAll(Example<Atividades> example) {
+    public Collection<Atividades> findAll(Example<Atividades> example) {
         return repo.findAll(example);
     }
 

@@ -59,7 +59,7 @@ public class ClienteService implements  ServiceDTO<Cliente, ClienteRequest, Clie
     }
 
     @Override
-    public List<Cliente> findAll(Example<Cliente> example) {
+    public Collection<Cliente> findAll(Example<Cliente> example) {
         return repo.findAll(example);
     }
 

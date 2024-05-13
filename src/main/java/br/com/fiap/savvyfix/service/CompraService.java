@@ -95,7 +95,7 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
     }
 
     @Override
-    public List<Compra> findAll(Example<Compra> example) {
+    public Collection<Compra> findAll(Example<Compra> example) {
         return repo.findAll(example);
     }
 

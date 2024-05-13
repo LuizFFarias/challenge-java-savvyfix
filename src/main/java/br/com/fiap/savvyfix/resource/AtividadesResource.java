@@ -42,8 +42,7 @@ public class AtividadesResource implements ResourceDTO<AtividadesRequest, Ativid
             @RequestParam(name = "qntdProcura", required = false) Integer procura,
             @RequestParam(name = "clima", required = false) String clima,
             @RequestParam(name = "precoVariado", required = false) Float precoVariado,
-            @RequestParam(name = "cliente.cpf", required = false) String cpfCliente,
-            @RequestParam(name = "produto.nome", required = false) String nomeProduto
+            @RequestParam(name = "cliente.cpf", required = false) String cpfCliente
             ){
         var cliente = Cliente.builder()
                 .cpf(cpfCliente)
@@ -61,7 +60,14 @@ public class AtividadesResource implements ResourceDTO<AtividadesRequest, Ativid
                 .build();
 
         ExampleMatcher matcher = ExampleMatcher
-                .matchingAll()
+                .matching()
+                .withMatcher("localizacao", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("horario", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("demanda", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("qntdProcura", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("clima", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("precoVariado", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("cliente.cpf", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withIgnoreCase()
                 .withIgnoreNullValues();
 

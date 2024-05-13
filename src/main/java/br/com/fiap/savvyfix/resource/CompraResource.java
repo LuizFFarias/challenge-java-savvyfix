@@ -80,7 +80,13 @@ public class CompraResource implements ResourceDTO<CompraRequest, CompraResponse
             .build();
 
         ExampleMatcher matcher = ExampleMatcher
-                .matchingAll()
+                .matching()
+                .withMatcher("nomeProd", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("valorCompra", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("especificacoes", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("marca", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("cpf.clie", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("horario", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withIgnoreCase()
                 .withIgnoreNullValues();
 

@@ -52,7 +52,7 @@ public class ProdutoService implements ServiceDTO<Produto, ProdutoRequest, Produ
     }
 
     @Override
-    public List<Produto> findAll(Example<Produto> example) {
+    public Collection<Produto> findAll(Example<Produto> example) {
         return repo.findAll(example);
     }
 

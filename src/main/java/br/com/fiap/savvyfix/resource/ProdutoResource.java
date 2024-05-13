@@ -42,7 +42,10 @@ public class ProdutoResource implements ResourceDTO<ProdutoRequest, ProdutoRespo
                 .build();
 
         ExampleMatcher matcher = ExampleMatcher
-                .matchingAll()
+                .matching()
+                .withMatcher("nome", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("marca", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("preco", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withIgnoreCase()
                 .withIgnoreNullValues();
 

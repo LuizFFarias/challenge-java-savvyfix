@@ -65,7 +65,11 @@ public class ClienteResource implements ResourceDTO<ClienteRequest, ClienteRespo
                 .build();
 
        ExampleMatcher matcher = ExampleMatcher
-               .matchingAll()
+               .matching()
+               .withMatcher("cpf", ExampleMatcher.GenericPropertyMatchers.contains())
+               .withMatcher("nome", ExampleMatcher.GenericPropertyMatchers.contains())
+               .withMatcher("endereco.cep", ExampleMatcher.GenericPropertyMatchers.contains())
+               .withMatcher("endereco.bairro", ExampleMatcher.GenericPropertyMatchers.contains())
                .withIgnoreCase()
                .withIgnoreNullValues();
 
