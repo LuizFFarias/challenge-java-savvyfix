@@ -44,11 +44,16 @@ public class EnderecoResource implements ResourceDTO<EnderecoRequest, EnderecoRe
                 .build();
 
         ExampleMatcher matcher = ExampleMatcher
-                .matchingAll()
+                .matching()
+                .withMatcher("cep", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("rua", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("bairro", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withIgnoreCase()
                 .withIgnoreNullValues();
 
         Example<Endereco> example = Example.of(endereco, matcher);
+
+
 
         Collection<Endereco> all = service.findAll(example);
         if (Objects.isNull(all) || all.isEmpty()) return ResponseEntity.notFound().build();

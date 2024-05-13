@@ -59,7 +59,7 @@ public class EnderecoService implements ServiceDTO<Endereco, EnderecoRequest, En
     }
 
     @Override
-    public List<Endereco> findAll(Example<Endereco> example) {
+    public Collection<Endereco> findAll(Example<Endereco> example) {
         return repo.findAll(example);
     }
 

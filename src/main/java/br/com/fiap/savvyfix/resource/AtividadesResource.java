@@ -49,9 +49,6 @@ public class AtividadesResource implements ResourceDTO<AtividadesRequest, Ativid
                 .cpf(cpfCliente)
                 .build();
 
-        var produto = Produto.builder()
-                .nome(nomeProduto)
-                .build();
 
         var atividades = Atividades.builder()
                 .horarioAtual(horario)
@@ -61,7 +58,6 @@ public class AtividadesResource implements ResourceDTO<AtividadesRequest, Ativid
                 .climaAtual(clima)
                 .precoVariado(precoVariado)
                 .cliente(cliente)
-                .produto(produto)
                 .build();
 
         ExampleMatcher matcher = ExampleMatcher

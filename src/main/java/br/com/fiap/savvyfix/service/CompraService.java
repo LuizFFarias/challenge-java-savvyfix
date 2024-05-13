@@ -57,13 +57,13 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
         if (Objects.nonNull(atividades) && atividades.precoVariado() > 0){
             var precoVariado = atividades.precoVariado();
             var qntdProd = compra.getQntdProd();
-            Float valorCompra = precoVariado * qntdProd;
+            var valorCompra = precoVariado * qntdProd;
 
             return CompraResponse.builder()
                     .id(compra.getId())
                     .nomeProd( compra.getNomeProd() )
                     .qntdProd( compra.getQntdProd() )
-                    .valorCompra( valorCompra )
+                    .valorCompra(Float.valueOf(valorCompra))
                     .especificacoes( compra.getEspecificacoes())
                     .atividades( atividades )
                     .produto( produto )
