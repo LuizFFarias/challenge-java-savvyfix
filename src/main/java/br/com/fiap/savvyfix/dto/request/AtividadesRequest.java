@@ -20,8 +20,6 @@ public record AtividadesRequest (
         String demanda,
 
         @Valid
-        AbstractRequest cliente,
+        AbstractRequest cliente
 
-        @Valid
-        AbstractRequest produto
 ) {}

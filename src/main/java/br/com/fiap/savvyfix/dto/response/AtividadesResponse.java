@@ -16,6 +16,5 @@ public record AtividadesResponse (
         String  climaAtual,
         Integer qntdProcura,
         String demanda,
-        ClienteResponse cliente,
-        ProdutoResponse produto
+        ClienteResponse cliente
 ) {}
