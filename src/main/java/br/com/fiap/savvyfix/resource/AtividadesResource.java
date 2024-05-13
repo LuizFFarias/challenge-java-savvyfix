@@ -4,7 +4,6 @@ import br.com.fiap.savvyfix.dto.request.AtividadesRequest;
 import br.com.fiap.savvyfix.dto.response.AtividadesResponse;
 import br.com.fiap.savvyfix.entity.Atividades;
 import br.com.fiap.savvyfix.entity.Cliente;
-import br.com.fiap.savvyfix.entity.Produto;
 import br.com.fiap.savvyfix.service.AtividadesService;
 import br.com.fiap.savvyfix.service.ClienteService;
 import br.com.fiap.savvyfix.service.ProdutoService;
@@ -27,12 +26,6 @@ public class AtividadesResource implements ResourceDTO<AtividadesRequest, Ativid
 
     @Autowired
     private AtividadesService service;
-
-    @Autowired
-    private ClienteService clienteService;
-
-    @Autowired
-    private ProdutoService produtoService;
 
     @GetMapping
     public ResponseEntity<Collection<AtividadesResponse>> findAll(
@@ -77,7 +70,7 @@ public class AtividadesResource implements ResourceDTO<AtividadesRequest, Ativid
         if (Objects.isNull(all) || all.isEmpty()) return ResponseEntity.notFound().build();
         var response = all.stream().map(service::toResponse).toList();
         return ResponseEntity.ok(response);
-    };
+    }
 
 
     @Override

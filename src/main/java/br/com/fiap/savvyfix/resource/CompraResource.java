@@ -30,15 +30,6 @@ public class CompraResource implements ResourceDTO<CompraRequest, CompraResponse
     @Autowired
     private CompraService service;
 
-    @Autowired
-    private ProdutoService produtoService;
-
-    @Autowired
-    private ClienteService clienteService;
-
-    @Autowired
-    private AtividadesService atividadesService;
-
     @GetMapping
     public ResponseEntity<Collection<CompraResponse>> findAll(
             @RequestParam(name = "nomeProd", required = false) String nomeProd,

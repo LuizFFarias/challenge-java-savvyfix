@@ -79,7 +79,7 @@ public class ClienteResource implements ResourceDTO<ClienteRequest, ClienteRespo
        if (Objects.isNull(all) || all.isEmpty()) return ResponseEntity.notFound().build();
        var response = all.stream().map(service::toResponse).toList();
        return ResponseEntity.ok(response);
-   };
+   }
 
     @Override
     @GetMapping(value = "/{id}")
