@@ -17,7 +17,7 @@ import java.util.List;
 public class ProdutoService implements ServiceDTO<Produto, ProdutoRequest, ProdutoResponse>{
 
     @Autowired
-    ProdutoRepository repo;
+    private ProdutoRepository repo;
 
     @Override
     public Produto toEntity(ProdutoRequest produtoRequest) {

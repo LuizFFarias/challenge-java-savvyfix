@@ -1,7 +1,5 @@
 package br.com.fiap.savvyfix.dto.response;
 
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.time.LocalTime;

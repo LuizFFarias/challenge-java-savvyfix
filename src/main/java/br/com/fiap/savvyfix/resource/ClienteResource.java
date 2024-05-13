@@ -90,6 +90,7 @@ public class ClienteResource implements ResourceDTO<ClienteRequest, ClienteRespo
         return ResponseEntity.ok( resposta );
     }
 
+    @Override
     @Transactional
     @PostMapping
     public ResponseEntity<ClienteResponse> save(@RequestBody @Valid ClienteRequest cliente) {

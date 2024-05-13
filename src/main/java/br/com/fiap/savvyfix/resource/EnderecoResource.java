@@ -21,7 +21,7 @@ public class EnderecoResource implements ResourceDTO<EnderecoRequest, EnderecoRe
 
 
     @Autowired
-    EnderecoService service;
+    private EnderecoService service;
 
     @GetMapping
     public ResponseEntity<Collection<EnderecoResponse>> findAll(
@@ -72,6 +72,7 @@ public class EnderecoResource implements ResourceDTO<EnderecoRequest, EnderecoRe
         return ResponseEntity.ok( resposta );
     }
 
+    @Override
     @Transactional
     @PostMapping
     public ResponseEntity<EnderecoResponse> save(@RequestBody @Valid EnderecoRequest endereco) {

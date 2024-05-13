@@ -1,33 +1,30 @@
 package br.com.fiap.savvyfix.service;
-import br.com.fiap.savvyfix.dto.request.ClienteRequest;
+
 import br.com.fiap.savvyfix.dto.request.CompraRequest;
-import br.com.fiap.savvyfix.dto.response.ClienteResponse;
 import br.com.fiap.savvyfix.dto.response.CompraResponse;
-import br.com.fiap.savvyfix.entity.*;
+import br.com.fiap.savvyfix.entity.Compra;
 import br.com.fiap.savvyfix.repository.CompraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraResponse>{
 
     @Autowired
-    CompraRepository repo;
+    private CompraRepository repo;
 
     @Autowired
-    AtividadesService atividadesService;
+    private AtividadesService atividadesService;
 
     @Autowired
-    ProdutoService produtoService;
+    private ProdutoService produtoService;
 
     @Autowired
-    ClienteService clienteService;
+    private ClienteService clienteService;
 
     @Override
     public Compra toEntity(CompraRequest compraRequest) {

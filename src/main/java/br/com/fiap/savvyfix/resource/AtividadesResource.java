@@ -26,13 +26,13 @@ import java.util.Objects;
 public class AtividadesResource implements ResourceDTO<AtividadesRequest, AtividadesResponse>{
 
     @Autowired
-    AtividadesService service;
+    private AtividadesService service;
 
     @Autowired
-    ClienteService clienteService;
+    private ClienteService clienteService;
 
     @Autowired
-    ProdutoService produtoService;
+    private ProdutoService produtoService;
 
     @GetMapping
     public ResponseEntity<Collection<AtividadesResponse>> findAll(
@@ -89,6 +89,7 @@ public class AtividadesResource implements ResourceDTO<AtividadesRequest, Ativid
         return ResponseEntity.ok( resposta );
     }
 
+    @Override
     @Transactional
     @PostMapping
     public ResponseEntity<AtividadesResponse> save(@RequestBody @Valid AtividadesRequest atividades) {

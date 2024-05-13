@@ -24,7 +24,7 @@ import java.util.Objects;
 public class ProdutoResource implements ResourceDTO<ProdutoRequest, ProdutoResponse>{
 
     @Autowired
-    ProdutoService service;
+    private ProdutoService service;
 
 
     @GetMapping

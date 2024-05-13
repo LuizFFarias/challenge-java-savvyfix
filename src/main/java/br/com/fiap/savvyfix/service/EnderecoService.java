@@ -16,7 +16,7 @@ import java.util.List;
 public class EnderecoService implements ServiceDTO<Endereco, EnderecoRequest, EnderecoResponse>{
 
     @Autowired
-    EnderecoRepository repo;
+    private EnderecoRepository repo;
 
     @Override
     public Endereco toEntity( EnderecoRequest enderecoRequest) {
