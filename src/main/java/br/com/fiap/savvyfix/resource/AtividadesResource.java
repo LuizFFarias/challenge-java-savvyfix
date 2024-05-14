@@ -5,8 +5,6 @@ import br.com.fiap.savvyfix.dto.response.AtividadesResponse;
 import br.com.fiap.savvyfix.entity.Atividades;
 import br.com.fiap.savvyfix.entity.Cliente;
 import br.com.fiap.savvyfix.service.AtividadesService;
-import br.com.fiap.savvyfix.service.ClienteService;
-import br.com.fiap.savvyfix.service.ProdutoService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
