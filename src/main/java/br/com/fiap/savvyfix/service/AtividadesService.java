@@ -75,5 +75,7 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
 
     public Atividades findById(Long id) {return repo.findById(id).orElse(null);}
 
+    public Atividades findByClienteId(Long clienteId) {return repo.findByClienteId(clienteId);}
+
 
 }

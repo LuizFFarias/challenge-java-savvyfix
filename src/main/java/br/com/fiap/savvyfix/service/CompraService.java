@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Service
-public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraResponse>{
+public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraResponse> {
 
     @Autowired
     private CompraRepository repo;
@@ -34,28 +34,28 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
 
         var produto = produtoService.findById(compraRequest.produto().id());
         var cliente = clienteService.findById(compraRequest.cliente().id());
-        var atividades = atividadesService.findById(compraRequest.atividades().id());
+        var atividades = atividadesService.findByClienteId(compraRequest.cliente().id());
 
         float valorCompra = 0;
-        if (Objects.nonNull(atividades) && atividades.getPrecoVariado() > 0) {
+        var qntdProd = compraRequest.qntdProd();
+
+        if (atividades.getPrecoVariado() > 0) {
             var precoVariado = atividades.getPrecoVariado();
-            var qntdProd = compraRequest.qntdProd();
             valorCompra = precoVariado * qntdProd;
         } else {
             var precoFixo = produto.getPrecoFixo();
-            var qntdProd = compraRequest.qntdProd();
             valorCompra = precoFixo * qntdProd;
 
         }
 
         return Compra.builder()
-                .nomeProd( compraRequest.nomeProd() )
-                .qntdProd( compraRequest.qntdProd() )
+                .nomeProd(compraRequest.nomeProd())
+                .qntdProd(compraRequest.qntdProd())
                 .valorCompra(valorCompra)
-                .especificacoes( compraRequest.especificacoes())
-                .produto( produto )
-                .atividades( atividades )
-                .cliente( cliente )
+                .especificacoes(compraRequest.especificacoes())
+                .produto(produto)
+                .atividades(atividades)
+                .cliente(cliente)
                 .build();
     }
 
@@ -65,42 +65,18 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
         var produto = produtoService.toResponse(compra.getProduto());
         var cliente = clienteService.toResponse(compra.getCliente());
 
-
-        if (Objects.nonNull(atividades) && atividades.precoVariado() > 0){
-            var precoVariado = atividades.precoVariado();
-            var qntdProd = compra.getQntdProd();
-            var valorCompra = precoVariado * qntdProd;
-            System.out.println("precoVariado: " + precoVariado + " qntdProduto: " + qntdProd + "valorCompra: " + valorCompra);
-
-            return CompraResponse.builder()
-                    .id(compra.getId())
-                    .nomeProd( compra.getNomeProd() )
-                    .qntdProd( compra.getQntdProd() )
-                    .valorCompra(valorCompra)
-                    .especificacoes( compra.getEspecificacoes())
-                    .atividades( atividades )
-                    .produto( produto )
-                    .cliente( cliente )
-                    .build();
-        } else {
-            var precoFixo = produto.precoFixo();
-            var qntdProduto = compra.getQntdProd();
-            var valorCompra = precoFixo * qntdProduto;
-            System.out.println("precoFixo: " + precoFixo + " qntdProd: " + qntdProduto + "valor compra: " + valorCompra );
-            valorCompra = 123;
-            return CompraResponse.builder()
-                    .id(compra.getId())
-                    .nomeProd( compra.getNomeProd() )
-                    .qntdProd( compra.getQntdProd() )
-                    .valorCompra( valorCompra )
-                    .especificacoes( compra.getEspecificacoes())
-                    .atividades( atividades )
-                    .produto( produto )
-                    .cliente( cliente )
-                    .build();
-        }
-
+        return CompraResponse.builder()
+                .id(compra.getId())
+                .nomeProd(compra.getNomeProd())
+                .qntdProd(compra.getQntdProd())
+                .valorCompra(compra.getValorCompra())
+                .especificacoes(compra.getEspecificacoes())
+                .atividades(atividades)
+                .produto(produto)
+                .cliente(cliente)
+                .build();
     }
+
 
     @Override
     public Collection<Compra> findAll() {
@@ -118,9 +94,9 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
     }
 
     public Compra findById(Long id) {
-        return  repo.findById(id).orElse(null);
+        return repo.findById(id).orElse(null);
     }
-}
 
+}
 
 
