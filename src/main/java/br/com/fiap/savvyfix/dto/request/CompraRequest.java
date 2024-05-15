@@ -11,9 +11,6 @@ public record CompraRequest (
         @NotNull(message = "A quantidade de produtos é obrigatório")
         Integer qntdProd,
 
-        @NotNull(message = "O valor é obrigatório")
-        Float valorCompra,
-
         @NotNull(message = "As especificacoes são obrigatórias")
         String especificacoes,
 
