@@ -9,14 +9,13 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
 
 
 @Service
 public class EnderecoService implements ServiceDTO<Endereco, EnderecoRequest, EnderecoResponse>{
 
     @Autowired
-    EnderecoRepository repo;
+    private EnderecoRepository repo;
 
     @Override
     public Endereco toEntity( EnderecoRequest enderecoRequest) {
@@ -59,7 +58,7 @@ public class EnderecoService implements ServiceDTO<Endereco, EnderecoRequest, En
     }
 
     @Override
-    public List<Endereco> findAll(Example<Endereco> example) {
+    public Collection<Endereco> findAll(Example<Endereco> example) {
         return repo.findAll(example);
     }
 

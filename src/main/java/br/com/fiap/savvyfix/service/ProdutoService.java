@@ -10,14 +10,13 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
 
 
 @Service
 public class ProdutoService implements ServiceDTO<Produto, ProdutoRequest, ProdutoResponse>{
 
     @Autowired
-    ProdutoRepository repo;
+    private ProdutoRepository repo;
 
     @Override
     public Produto toEntity(ProdutoRequest produtoRequest) {
@@ -52,7 +51,7 @@ public class ProdutoService implements ServiceDTO<Produto, ProdutoRequest, Produ
     }
 
     @Override
-    public List<Produto> findAll(Example<Produto> example) {
+    public Collection<Produto> findAll(Example<Produto> example) {
         return repo.findAll(example);
     }
 

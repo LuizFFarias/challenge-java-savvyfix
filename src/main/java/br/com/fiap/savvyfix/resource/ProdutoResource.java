@@ -13,9 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -24,7 +22,7 @@ import java.util.Objects;
 public class ProdutoResource implements ResourceDTO<ProdutoRequest, ProdutoResponse>{
 
     @Autowired
-    ProdutoService service;
+    private ProdutoService service;
 
 
     @GetMapping
@@ -42,7 +40,10 @@ public class ProdutoResource implements ResourceDTO<ProdutoRequest, ProdutoRespo
                 .build();
 
         ExampleMatcher matcher = ExampleMatcher
-                .matchingAll()
+                .matching()
+                .withMatcher("nome", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("marca", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("preco", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withIgnoreCase()
                 .withIgnoreNullValues();
 

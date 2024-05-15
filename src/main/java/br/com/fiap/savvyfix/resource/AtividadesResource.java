@@ -4,10 +4,7 @@ import br.com.fiap.savvyfix.dto.request.AtividadesRequest;
 import br.com.fiap.savvyfix.dto.response.AtividadesResponse;
 import br.com.fiap.savvyfix.entity.Atividades;
 import br.com.fiap.savvyfix.entity.Cliente;
-import br.com.fiap.savvyfix.entity.Produto;
 import br.com.fiap.savvyfix.service.AtividadesService;
-import br.com.fiap.savvyfix.service.ClienteService;
-import br.com.fiap.savvyfix.service.ProdutoService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +23,7 @@ import java.util.Objects;
 public class AtividadesResource implements ResourceDTO<AtividadesRequest, AtividadesResponse>{
 
     @Autowired
-    AtividadesService service;
-
-    @Autowired
-    ClienteService clienteService;
-
-    @Autowired
-    ProdutoService produtoService;
+    private AtividadesService service;
 
     @GetMapping
     public ResponseEntity<Collection<AtividadesResponse>> findAll(
@@ -42,16 +33,12 @@ public class AtividadesResource implements ResourceDTO<AtividadesRequest, Ativid
             @RequestParam(name = "qntdProcura", required = false) Integer procura,
             @RequestParam(name = "clima", required = false) String clima,
             @RequestParam(name = "precoVariado", required = false) Float precoVariado,
-            @RequestParam(name = "cliente.cpf", required = false) String cpfCliente,
-            @RequestParam(name = "produto.nome", required = false) String nomeProduto
+            @RequestParam(name = "cliente.cpf", required = false) String cpfCliente
             ){
         var cliente = Cliente.builder()
                 .cpf(cpfCliente)
                 .build();
 
-        var produto = Produto.builder()
-                .nome(nomeProduto)
-                .build();
 
         var atividades = Atividades.builder()
                 .horarioAtual(horario)
@@ -61,11 +48,17 @@ public class AtividadesResource implements ResourceDTO<AtividadesRequest, Ativid
                 .climaAtual(clima)
                 .precoVariado(precoVariado)
                 .cliente(cliente)
-                .produto(produto)
                 .build();
 
         ExampleMatcher matcher = ExampleMatcher
-                .matchingAll()
+                .matching()
+                .withMatcher("localizacao", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("horario", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("demanda", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("qntdProcura", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("clima", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("precoVariado", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("cliente.cpf", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withIgnoreCase()
                 .withIgnoreNullValues();
 
@@ -75,7 +68,7 @@ public class AtividadesResource implements ResourceDTO<AtividadesRequest, Ativid
         if (Objects.isNull(all) || all.isEmpty()) return ResponseEntity.notFound().build();
         var response = all.stream().map(service::toResponse).toList();
         return ResponseEntity.ok(response);
-    };
+    }
 
 
     @Override
@@ -87,6 +80,7 @@ public class AtividadesResource implements ResourceDTO<AtividadesRequest, Ativid
         return ResponseEntity.ok( resposta );
     }
 
+    @Override
     @Transactional
     @PostMapping
     public ResponseEntity<AtividadesResponse> save(@RequestBody @Valid AtividadesRequest atividades) {

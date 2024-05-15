@@ -65,7 +65,11 @@ public class ClienteResource implements ResourceDTO<ClienteRequest, ClienteRespo
                 .build();
 
        ExampleMatcher matcher = ExampleMatcher
-               .matchingAll()
+               .matching()
+               .withMatcher("cpf", ExampleMatcher.GenericPropertyMatchers.contains())
+               .withMatcher("nome", ExampleMatcher.GenericPropertyMatchers.contains())
+               .withMatcher("endereco.cep", ExampleMatcher.GenericPropertyMatchers.contains())
+               .withMatcher("endereco.bairro", ExampleMatcher.GenericPropertyMatchers.contains())
                .withIgnoreCase()
                .withIgnoreNullValues();
 
@@ -75,7 +79,7 @@ public class ClienteResource implements ResourceDTO<ClienteRequest, ClienteRespo
        if (Objects.isNull(all) || all.isEmpty()) return ResponseEntity.notFound().build();
        var response = all.stream().map(service::toResponse).toList();
        return ResponseEntity.ok(response);
-   };
+   }
 
     @Override
     @GetMapping(value = "/{id}")
@@ -86,6 +90,7 @@ public class ClienteResource implements ResourceDTO<ClienteRequest, ClienteRespo
         return ResponseEntity.ok( resposta );
     }
 
+    @Override
     @Transactional
     @PostMapping
     public ResponseEntity<ClienteResponse> save(@RequestBody @Valid ClienteRequest cliente) {

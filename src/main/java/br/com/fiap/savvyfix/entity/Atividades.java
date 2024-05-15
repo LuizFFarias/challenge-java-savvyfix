@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
@@ -34,7 +33,7 @@ public class Atividades {
     private String localizacaoAtual;
 
     @Column(name = "CLIMA_ATUAL", length = 20)
-    private String  climaAtual;
+    private String climaAtual;
 
     @Column(name = "QNTD_PROCURA", nullable = false, length = 10)
     private Integer qntdProcura;
@@ -52,13 +51,4 @@ public class Atividades {
     )
     private Cliente cliente;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(
-            name = "ID_PROD",
-            referencedColumnName = "ID_PROD",
-            foreignKey = @ForeignKey(
-                    name = "PRODUTO_ATIVIDADES_FK"
-            )
-    )
-    private Produto produto;
 }

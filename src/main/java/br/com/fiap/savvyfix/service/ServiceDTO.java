@@ -15,6 +15,6 @@ public interface ServiceDTO<Entity, Request, Response>{
 
     Entity save(Entity entity);
 
-    List<Entity> findAll(Example<Entity> example);
+    Collection<Entity> findAll(Example<Entity> example);
 
 }

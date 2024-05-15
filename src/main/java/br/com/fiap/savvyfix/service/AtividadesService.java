@@ -24,14 +24,12 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
     @Autowired
     private ClienteService clienteService;
 
-    @Autowired
-    private ProdutoService produtoService;
 
     @Override
     public Atividades toEntity(AtividadesRequest atividadesRequest) {
 
         Cliente cliente = clienteService.findById( atividadesRequest.cliente().id() );
-        Produto produto = produtoService.findById( atividadesRequest.produto().id() );
+
 
         return Atividades.builder()
                 .precoVariado(atividadesRequest.precoVariado() )
@@ -41,14 +39,12 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
                 .qntdProcura( atividadesRequest.qntdProcura())
                 .demanda( atividadesRequest.demanda())
                 .cliente( cliente )
-                .produto( produto )
                 .build();
     }
 
     @Override
     public AtividadesResponse toResponse(Atividades atividades) {
         var cliente = clienteService.toResponse(atividades.getCliente());
-        var produto = produtoService.toResponse(atividades.getProduto());
 
         return AtividadesResponse.builder()
                 .id(atividades.getId())
@@ -59,7 +55,6 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
                 .qntdProcura( atividades.getQntdProcura())
                 .demanda( atividades.getDemanda())
                 .cliente( cliente )
-                .produto( produto )
                 .build();
     }
 
@@ -74,7 +69,7 @@ public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequ
     }
 
     @Override
-    public List<Atividades> findAll(Example<Atividades> example) {
+    public Collection<Atividades> findAll(Example<Atividades> example) {
         return repo.findAll(example);
     }
 
