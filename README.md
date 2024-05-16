@@ -38,27 +38,50 @@ https://youtu.be/ltPanBm_5ks <br>
 
 ## Endereços dos EndPoints
 ### Endereço
-<p>localhost/enderecos GET</p> 
-<p>localhost/enderecos/cep/{cep} - GET</p> 
-<p>localhost/enderecos  - POST</p> 
+<p>localhost/enderecos - GET</p>
+<p>localhost/enderecos?cep={cep} - GET</p> 
+<p>localhost/enderecos?rua={rua} - GET</p> 
+<p>localhost/enderecos?bairro={bairro} - GET</p> 
+<p>localhost/enderecos/{id} - GET</p> 
+<p>localhost/enderecos - POST</p> 
 
 ### Produtos
 <p>localhost/produtos - GET</p> 
+<p>localhost/produtos?nome={nome} - GET</p> 
+<p>localhost/produtos?marca={marca} - GET</p> 
+<p>localhost/produtos?preco={preco} - GET</p> 
 <p>localhost/produtos/{id}  - GET</p> 
-<p>localhost/produtos  - POST</p> 
+<p>localhost/produtos - POST</p> 
+
+### Clientes
+<p>localhost/clientes - GET</p>
+<p>localhost/clientes?cpf={cpf} - GET</p> 
+<p>localhost/clientes?nome={nome} - GET</p> 
+<p>localhost/clientes?endereco.cep={cep} - GET</p>
+<p>localhost/clientes?endereco.bairro={bairro} - GET</p> 
+<p>localhost/clientes/{id} - GET </p> 
+<p>localhost/clientes  - POST</p>
 
 ### Atividades
 <p>localhost/atividades  - GET</p>
-<p>localhost/atividades/precoVariado/{precoVariado} - GET</p> 
-<p>localhost/atividades - POST</p> 
-
-### Clientes
-<p>localhost/clientes GET</p> 
-<p>localhost/clientes/{id} GET </p> 
-<p>localhost/clientes  - POST</p>
+<p>localhost/atividades?localizacao{localizacao}  - GET</p>
+<p>localhost/atividades?horario={horario}  - GET</p>
+<p>localhost/atividades?demanda={demanda}  - GET</p>
+<p>localhost/atividades?qntdProcura={qntdProcura}  - GET</p>
+<p>localhost/atividades?clima={clima}  - GET</p>
+<p>localhost/atividades?precoVariado={precoVariado}  - GET</p>
+<p>localhost/atividades?cliente.cpf={cpf}  - GET</p>
+<p>localhost/atividades/{id} - GET</p> 
+<p>localhost/atividades - POST</p>
 
 ### Compra
-<p>localhost/compras  - GET</p> 
+<p>localhost/compras  - GET</p>
+<p>localhost/compras?nomeProd={nomeProduto}  - GET</p>
+<p>localhost/compras?valorCompra={valorCompra}  - GET</p>
+<p>localhost/compras?especificacoes={especificacoes}  - GET</p>
+<p>localhost/compras?marca={marca}  - GET</p>
+<p>localhost/compras?cpf.clie={cpf}  - GET</p>
+<p>localhost/compras?horario={horario}  - GET</p>
 <p>localhost/compras/{id} GET</p> 
 <p>localhost/compras  - POST</p> 
 
