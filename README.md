@@ -21,16 +21,16 @@
 
 ## Imagens dos diagramas
 ### Diagrama Entidade-Relacionamento
-![](documentacao/diagramas/WhatsApp%20Image%202024-04-11%20at%2019.10.19.jpeg)
+loading
 
 ### Modelo Entidade-Relacionamento
-![](documentacao/diagramas/WhatsApp%20Image%202024-04-11%20at%2019.10.30.jpeg)
+loading
 
 ### Diagrama de Classes
-![DiagramaClasses](https://github.com/LuizFFarias/challenge-java-savvyfix/assets/85761347/f579f462-41aa-4978-8108-e827c00831b2)
+loading
 
 ### Arquitetura da solução
-![Arquitetura_Software_SavvyFix](https://github.com/LuizFFarias/challenge-java-savvyfix/assets/85761347/c52c0a08-ca81-4da3-9e36-8e4dcd84dc33)
+![Arquitetura_Software_SavvyFix](https://github.com/LuizFFarias/challenge-java-savvyfix/assets/85761347/be7f523a-804f-4689-97ab-93bca547b6b5)
 
 
 ## Link do pitch
