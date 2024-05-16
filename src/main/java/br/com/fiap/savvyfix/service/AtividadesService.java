@@ -1,20 +1,15 @@
 package br.com.fiap.savvyfix.service;
+
 import br.com.fiap.savvyfix.dto.request.AtividadesRequest;
 import br.com.fiap.savvyfix.dto.response.AtividadesResponse;
-import br.com.fiap.savvyfix.dto.response.ClienteResponse;
 import br.com.fiap.savvyfix.entity.Atividades;
 import br.com.fiap.savvyfix.entity.Cliente;
-import br.com.fiap.savvyfix.entity.Endereco;
-import br.com.fiap.savvyfix.entity.Produto;
 import br.com.fiap.savvyfix.repository.AtividadesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 public class AtividadesService implements  ServiceDTO<Atividades, AtividadesRequest, AtividadesResponse>{

@@ -2,16 +2,13 @@ package br.com.fiap.savvyfix.service;
 
 import br.com.fiap.savvyfix.dto.request.CompraRequest;
 import br.com.fiap.savvyfix.dto.response.CompraResponse;
-import br.com.fiap.savvyfix.entity.Atividades;
 import br.com.fiap.savvyfix.entity.Compra;
 import br.com.fiap.savvyfix.repository.CompraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Objects;
 
 @Service
 public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraResponse> {
@@ -36,7 +33,7 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
         var cliente = clienteService.findById(compraRequest.cliente().id());
         var atividades = atividadesService.findByClienteId(compraRequest.cliente().id());
 
-        float valorCompra = 0;
+        float valorCompra;
         var qntdProd = compraRequest.qntdProd();
 
         if (atividades.getPrecoVariado() > 0) {
