@@ -27,7 +27,8 @@ loading
 loading
 
 ### Diagrama de Classes
-loading
+![DiagramaClasses](https://github.com/LuizFFarias/challenge-java-savvyfix/assets/85761347/998723f8-4e88-400a-99ff-316a347103b9)
+
 
 ### Arquitetura da solução
 ![Arquitetura_Software_SavvyFix](https://github.com/LuizFFarias/challenge-java-savvyfix/assets/85761347/be7f523a-804f-4689-97ab-93bca547b6b5)
