@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record CompraRequest (
 
-        @NotNull(message = "O nome do produto é obrigatório")
-        String nomeProd,
 
         @NotNull(message = "A quantidade de produtos é obrigatório")
         Integer qntdProd,

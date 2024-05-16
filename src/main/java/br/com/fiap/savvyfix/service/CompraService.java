@@ -49,7 +49,7 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
         }
 
         return Compra.builder()
-                .nomeProd(compraRequest.nomeProd())
+                .nomeProd(produto.getNome())
                 .qntdProd(compraRequest.qntdProd())
                 .valorCompra(valorCompra)
                 .especificacoes(compraRequest.especificacoes())

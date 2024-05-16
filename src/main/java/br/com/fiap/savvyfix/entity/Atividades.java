@@ -14,7 +14,9 @@ import java.time.LocalTime;
 @Builder
 
 @Entity
-@Table(name = "Atividades")
+@Table(name = "Atividades", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_CLIENTE_ATIVIDADES", columnNames = "ID_CLIENTE")
+})
 public class Atividades {
 
     @Id
