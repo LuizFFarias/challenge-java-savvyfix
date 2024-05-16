@@ -9,10 +9,9 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Objects;
 
 @Service
-public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraResponse>{
+public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraResponse> {
 
     @Autowired
     private CompraRepository repo;
@@ -32,16 +31,28 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
 
         var produto = produtoService.findById(compraRequest.produto().id());
         var cliente = clienteService.findById(compraRequest.cliente().id());
-        var atividades = atividadesService.findById(compraRequest.atividades().id());
+        var atividades = atividadesService.findByClienteId(compraRequest.cliente().id());
+
+        float valorCompra;
+        var qntdProd = compraRequest.qntdProd();
+
+        if (atividades.getPrecoVariado() > 0) {
+            var precoVariado = atividades.getPrecoVariado();
+            valorCompra = precoVariado * qntdProd;
+        } else {
+            var precoFixo = produto.getPrecoFixo();
+            valorCompra = precoFixo * qntdProd;
+
+        }
 
         return Compra.builder()
-                .nomeProd( compraRequest.nomeProd() )
-                .qntdProd( compraRequest.qntdProd() )
-                .valorCompra( compraRequest.valorCompra() )
-                .especificacoes( compraRequest.especificacoes())
-                .atividades( atividades )
-                .produto( produto )
-                .cliente( cliente )
+                .nomeProd(produto.getNome())
+                .qntdProd(compraRequest.qntdProd())
+                .valorCompra(valorCompra)
+                .especificacoes(compraRequest.especificacoes())
+                .produto(produto)
+                .atividades(atividades)
+                .cliente(cliente)
                 .build();
     }
 
@@ -51,35 +62,18 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
         var produto = produtoService.toResponse(compra.getProduto());
         var cliente = clienteService.toResponse(compra.getCliente());
 
-        if (Objects.nonNull(atividades) && atividades.precoVariado() > 0){
-            var precoVariado = atividades.precoVariado();
-            var qntdProd = compra.getQntdProd();
-            var valorCompra = precoVariado * qntdProd;
-
-            return CompraResponse.builder()
-                    .id(compra.getId())
-                    .nomeProd( compra.getNomeProd() )
-                    .qntdProd( compra.getQntdProd() )
-                    .valorCompra(Float.valueOf(valorCompra))
-                    .especificacoes( compra.getEspecificacoes())
-                    .atividades( atividades )
-                    .produto( produto )
-                    .cliente( cliente )
-                    .build();
-        } else {
-            return CompraResponse.builder()
-                    .id(compra.getId())
-                    .nomeProd( compra.getNomeProd() )
-                    .qntdProd( compra.getQntdProd() )
-                    .valorCompra( compra.getValorCompra() )
-                    .especificacoes( compra.getEspecificacoes())
-                    .atividades( atividades )
-                    .produto( produto )
-                    .cliente( cliente )
-                    .build();
-        }
-
+        return CompraResponse.builder()
+                .id(compra.getId())
+                .nomeProd(compra.getNomeProd())
+                .qntdProd(compra.getQntdProd())
+                .valorCompra(compra.getValorCompra())
+                .especificacoes(compra.getEspecificacoes())
+                .atividades(atividades)
+                .produto(produto)
+                .cliente(cliente)
+                .build();
     }
+
 
     @Override
     public Collection<Compra> findAll() {
@@ -97,9 +91,9 @@ public class CompraService implements ServiceDTO<Compra, CompraRequest, CompraRe
     }
 
     public Compra findById(Long id) {
-        return  repo.findById(id).orElse(null);
+        return repo.findById(id).orElse(null);
     }
-}
 
+}
 
 
