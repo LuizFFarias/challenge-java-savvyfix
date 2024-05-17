@@ -28,10 +28,8 @@ loading
 ### Diagrama de Classes
 ![DiagramaClasses](https://github.com/LuizFFarias/challenge-java-savvyfix/assets/85761347/998723f8-4e88-400a-99ff-316a347103b9)
 
-
 ### Arquitetura da solução
-![Arquitetura_Software_SavvyFix](https://github.com/LuizFFarias/challenge-java-savvyfix/assets/85761347/be7f523a-804f-4689-97ab-93bca547b6b5)
-
+![Arquitetura_Software_SavvyFix](https://github.com/LuizFFarias/challenge-java-savvyfix/assets/85761347/5d76b4d9-c8bb-499d-a49d-4c3f44556927)
 
 ## Link do pitch
 https://youtu.be/ltPanBm_5ks <br>
