@@ -1,4 +1,3 @@
-
 # SavvyFix - Precificação dinâmica
 
 ## Lista dos integrantes:
