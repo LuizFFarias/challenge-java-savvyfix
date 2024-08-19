@@ -5,6 +5,10 @@ import br.com.fiap.savvyfix.dto.response.AtividadesResponse;
 import br.com.fiap.savvyfix.entity.Atividades;
 import br.com.fiap.savvyfix.entity.Cliente;
 import br.com.fiap.savvyfix.service.AtividadesService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +23,19 @@ import java.util.Collection;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/atividades")
+@RequestMapping(value = "/atividades", produces = {"application/json"})
+@Tag(name = "savvyfix-api")
 public class AtividadesResource implements ResourceDTO<AtividadesRequest, AtividadesResponse>{
 
     @Autowired
     private AtividadesService service;
 
+    @Operation(summary = "Realiza busca de todas as atividades cadastradas e pela localização, horário, demanda, procura, clima, preço e CPF do cliente", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao buscar dados")
+    })
     @GetMapping
     public ResponseEntity<Collection<AtividadesResponse>> findAll(
             @RequestParam(name = "horario", required = false) LocalTime horario,
@@ -72,6 +83,12 @@ public class AtividadesResource implements ResourceDTO<AtividadesRequest, Ativid
 
 
     @Override
+    @Operation(summary = "Realiza busca dos dados das atividades pelo id", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao buscar dados")
+    })
     @GetMapping(value = "/{id}")
     public ResponseEntity<AtividadesResponse> findById(@PathVariable Long id) {
         var encontrado = service.findById( id );
@@ -81,6 +98,12 @@ public class AtividadesResource implements ResourceDTO<AtividadesRequest, Ativid
     }
 
     @Override
+    @Operation(summary = "Realiza o cadastro de novas atividades", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos para serem cadastrados"),
+            @ApiResponse(responseCode = "500", description = "Erro ao cadastrar")
+    })
     @Transactional
     @PostMapping
     public ResponseEntity<AtividadesResponse> save(@RequestBody @Valid AtividadesRequest atividades) {

@@ -4,6 +4,10 @@ import br.com.fiap.savvyfix.dto.request.EnderecoRequest;
 import br.com.fiap.savvyfix.dto.response.EnderecoResponse;
 import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.service.EnderecoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -16,13 +20,20 @@ import java.util.Collection;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/enderecos")
+@RequestMapping(value = "/enderecos", produces = {"application/json"})
+@Tag(name = "savvyfix-api")
 public class EnderecoResource implements ResourceDTO<EnderecoRequest, EnderecoResponse>{
 
 
     @Autowired
     private EnderecoService service;
 
+    @Operation(summary = "Realiza busca de todos os endereços registrados e pelo CEP, rua e bairro", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao buscar dados")
+    })
     @GetMapping
     public ResponseEntity<Collection<EnderecoResponse>> findAll(
             @RequestParam(name = "cep", required = false) String cep,
@@ -64,6 +75,12 @@ public class EnderecoResource implements ResourceDTO<EnderecoRequest, EnderecoRe
 
 
     @Override
+    @Operation(summary = "Realiza busca dos dados dos endereços pelo id", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao buscar dados")
+    })
     @GetMapping(value = "/{id}")
     public ResponseEntity<EnderecoResponse> findById(@PathVariable Long id) {
         var encontrado = service.findById( id );
@@ -73,6 +90,12 @@ public class EnderecoResource implements ResourceDTO<EnderecoRequest, EnderecoRe
     }
 
     @Override
+    @Operation(summary = "Realiza o cadastro de endereços relacionados aos clientes", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos para serem cadastrados"),
+            @ApiResponse(responseCode = "500", description = "Erro ao cadastrar")
+    })
     @Transactional
     @PostMapping
     public ResponseEntity<EnderecoResponse> save(@RequestBody @Valid EnderecoRequest endereco) {

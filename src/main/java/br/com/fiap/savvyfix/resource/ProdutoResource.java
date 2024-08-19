@@ -4,6 +4,10 @@ import br.com.fiap.savvyfix.dto.request.ProdutoRequest;
 import br.com.fiap.savvyfix.dto.response.ProdutoResponse;
 import br.com.fiap.savvyfix.entity.Produto;
 import br.com.fiap.savvyfix.service.ProdutoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -18,13 +22,20 @@ import java.util.Objects;
 
 
 @RestController
-@RequestMapping("/produtos")
+@RequestMapping(value = "/produtos", produces = "application/json")
+@Tag(name = "savvyfix-api")
 public class ProdutoResource implements ResourceDTO<ProdutoRequest, ProdutoResponse>{
 
     @Autowired
     private ProdutoService service;
 
 
+    @Operation(summary = "Realiza busca de todos os produtos registrados e pelo nome, marca e preço", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao buscar dados")
+    })
     @GetMapping
     public ResponseEntity<Collection<ProdutoResponse>> findAll(
             @RequestParam(name = "nome", required = false) String nome,
@@ -56,6 +67,12 @@ public class ProdutoResource implements ResourceDTO<ProdutoRequest, ProdutoRespo
 
     }
     @Override
+    @Operation(summary = "Realiza busca dos dados dos produtos pelo id", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao buscar dados")
+    })
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProdutoResponse> findById(@PathVariable Long id) {
         var encontrado = service.findById( id );
@@ -67,6 +84,12 @@ public class ProdutoResource implements ResourceDTO<ProdutoRequest, ProdutoRespo
 
 
     @Override
+    @Operation(summary = "Realiza o cadastro de novos produtos para venda", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos para serem cadastrados"),
+            @ApiResponse(responseCode = "500", description = "Erro ao cadastrar")
+    })
     @Transactional
     @PostMapping
     public ResponseEntity<ProdutoResponse> save(@RequestBody @Valid ProdutoRequest produto) {

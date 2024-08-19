@@ -6,6 +6,10 @@ import br.com.fiap.savvyfix.entity.Cliente;
 import br.com.fiap.savvyfix.entity.Endereco;
 import br.com.fiap.savvyfix.service.ClienteService;
 import br.com.fiap.savvyfix.service.EnderecoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -19,7 +23,8 @@ import java.util.Collection;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping(value = "/clientes", produces = {"application/json"})
+@Tag(name = "savvyfix-api")
 public class ClienteResource implements ResourceDTO<ClienteRequest, ClienteResponse>{
 
     @Autowired
@@ -28,6 +33,12 @@ public class ClienteResource implements ResourceDTO<ClienteRequest, ClienteRespo
     @Autowired
     private EnderecoService enderecoService;
 
+    @Operation(summary = "Realiza busca de todos os clientes registradas e pelo CPF, nome, CEP e bairro", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao buscar dados")
+    })
    @GetMapping
    public ResponseEntity<Collection<ClienteResponse>> findAll(
            @RequestParam(name = "cpf", required = false ) String cpf,
@@ -82,6 +93,12 @@ public class ClienteResource implements ResourceDTO<ClienteRequest, ClienteRespo
    }
 
     @Override
+    @Operation(summary = "Realiza busca dos dados dos clientes pelo id", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao buscar dados")
+    })
     @GetMapping(value = "/{id}")
     public ResponseEntity<ClienteResponse> findById(@PathVariable  Long id) {
         var encontrado = service.findById( id );
@@ -91,6 +108,12 @@ public class ClienteResource implements ResourceDTO<ClienteRequest, ClienteRespo
     }
 
     @Override
+    @Operation(summary = "Realiza o cadastro de novos clientes", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos para serem cadastrados"),
+            @ApiResponse(responseCode = "500", description = "Erro ao cadastrar")
+    })
     @Transactional
     @PostMapping
     public ResponseEntity<ClienteResponse> save(@RequestBody @Valid ClienteRequest cliente) {

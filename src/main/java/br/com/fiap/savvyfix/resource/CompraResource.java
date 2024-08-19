@@ -7,6 +7,10 @@ import br.com.fiap.savvyfix.entity.Cliente;
 import br.com.fiap.savvyfix.entity.Compra;
 import br.com.fiap.savvyfix.entity.Produto;
 import br.com.fiap.savvyfix.service.CompraService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +25,19 @@ import java.util.Collection;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/compras")
+@RequestMapping(value = "/compras", produces = {"application/json"})
+@Tag(name = "savvyfix-api")
 public class CompraResource implements ResourceDTO<CompraRequest, CompraResponse>{
 
     @Autowired
     private CompraService service;
 
+    @Operation(summary = "Realiza busca de todas as compras registradas e pelo nome, valor da compra, especificações, marca, CPF e horário", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao buscar dados")
+    })
     @GetMapping
     public ResponseEntity<Collection<CompraResponse>> findAll(
             @RequestParam(name = "nomeProd", required = false) String nomeProd,
@@ -81,6 +92,12 @@ public class CompraResource implements ResourceDTO<CompraRequest, CompraResponse
     }
 
     @Override
+    @Operation(summary = "Realiza busca dos dados das compras pelo id", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Não encontrado"),
+            @ApiResponse(responseCode = "500", description = "Erro ao buscar dados")
+    })
     @GetMapping(value = "/{id}")
     public ResponseEntity<CompraResponse> findById(@PathVariable Long id) {
         var encontrado = service.findById( id );
@@ -91,6 +108,12 @@ public class CompraResource implements ResourceDTO<CompraRequest, CompraResponse
 
 
     @Override
+    @Operation(summary = "Realiza o cadastro de compras realizadas pelos clientes", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastro realizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos para serem cadastrados"),
+            @ApiResponse(responseCode = "500", description = "Erro ao cadastrar")
+    })
     @Transactional
     @PostMapping
     public ResponseEntity<CompraResponse> save(@RequestBody @Valid CompraRequest compra) {
